@@ -6,6 +6,7 @@ export class LoginPage {
   readonly password: Locator
   readonly loginButton: Locator
   readonly error: Locator
+  readonly errorButton: Locator
 
   constructor(page: Page) {
     this.page = page
@@ -13,6 +14,7 @@ export class LoginPage {
     this.password = page.getByTestId('password')
     this.loginButton = page.getByTestId('login-button')
     this.error = page.getByTestId('error')
+    this.errorButton = page.getByTestId('error-button')
   }
 
   async goto() {
@@ -31,5 +33,9 @@ export class LoginPage {
 
   async expectError(message: string | RegExp) {
     await expect(this.error).toContainText(message)
+  }
+
+  async dismissError() {
+    await this.errorButton.click()
   }
 }

@@ -178,19 +178,16 @@ test.describe('Products', () => {
   })
 
   // 22
-  test('open menu shows the All Items, About, Logout, Reset links', async ({ page }) => {
-    await inventory.openMenu()
-    await expect(page.getByTestId('inventory-sidebar-link')).toBeVisible()
-    await expect(page.getByTestId('about-sidebar-link')).toBeVisible()
-    await expect(page.getByTestId('logout-sidebar-link')).toBeVisible()
-    await expect(page.getByTestId('reset-sidebar-link')).toBeVisible()
+  test('open menu shows the All Items, About, Logout, Reset links', async () => {
+    await inventory.sideMenu.open()
+    await inventory.sideMenu.expectLinksVisible()
   })
 
   // 23
   test('reset app state clears the cart badge after adding an item', async () => {
     await inventory.addToCartByName('Sauce Labs Backpack')
     await inventory.expectCartCount(1)
-    await inventory.resetAppState()
+    await inventory.sideMenu.resetAppState()
     await inventory.expectCartCount(0)
   })
 

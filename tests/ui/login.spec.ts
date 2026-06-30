@@ -1,12 +1,15 @@
 import { test, expect } from '@playwright/test'
 import { LoginPage } from '../../page-objects/LoginPage'
+import { InventoryPage } from '../../page-objects/InventoryPage'
 import { USERS, PASSWORD } from '../../data/users'
 
 test.describe('Login', () => {
   let login: LoginPage
+  let inventory: InventoryPage
 
   test.beforeEach(async ({ page }) => {
     login = new LoginPage(page)
+    inventory = new InventoryPage(page)
     await login.goto()
   })
 
@@ -71,18 +74,17 @@ test.describe('Login', () => {
     await login.expectError(/Username is required/i)
   })
 
-  test('error message can be dismissed', async ({ page }) => {
+  test('error message can be dismissed', async () => {
     await login.login(USERS.lockedOut, PASSWORD)
     await login.expectError(/locked out/i)
-    await page.getByTestId('error-button').click()
+    await login.dismissError()
     await expect(login.error).toHaveCount(0)
   })
 
-  test('successful login then logout returns to login', async ({ page }) => {
+  test('successful login then logout returns to login', async () => {
     await login.login(USERS.standard, PASSWORD)
     await login.expectLoggedIn()
-    await page.getByRole('button', { name: 'Open Menu' }).click()
-    await page.getByTestId('logout-sidebar-link').click()
+    await inventory.sideMenu.logout()
     await expect(login.loginButton).toBeVisible()
   })
 })

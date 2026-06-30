@@ -1,4 +1,5 @@
 import { type Page, type Locator, expect } from '@playwright/test'
+import { SideMenu } from './components/SideMenu'
 
 export class InventoryPage {
   readonly page: Page
@@ -7,7 +8,7 @@ export class InventoryPage {
   readonly cartBadge: Locator
   readonly items: Locator
   readonly sortDropdown: Locator
-  readonly menuButton: Locator
+  readonly sideMenu: SideMenu
 
   constructor(page: Page) {
     this.page = page
@@ -16,7 +17,7 @@ export class InventoryPage {
     this.cartBadge = page.getByTestId('shopping-cart-badge')
     this.items = page.getByTestId('inventory-item')
     this.sortDropdown = page.getByTestId('product-sort-container')
-    this.menuButton = page.getByRole('button', { name: 'Open Menu' })
+    this.sideMenu = new SideMenu(page)
   }
 
   async expectLoaded() {
@@ -56,15 +57,6 @@ export class InventoryPage {
 
   async openProductByName(name: string) {
     await this.page.getByTestId('inventory-item-name').filter({ hasText: name }).click()
-  }
-
-  async openMenu() {
-    await this.menuButton.click()
-  }
-
-  async resetAppState() {
-    await this.openMenu()
-    await this.page.getByTestId('reset-sidebar-link').click()
   }
 
   itemCount() {
