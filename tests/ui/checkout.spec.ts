@@ -5,6 +5,13 @@ import { CartPage } from '../../page-objects/CartPage'
 import { CheckoutPage } from '../../page-objects/CheckoutPage'
 import { USERS, PASSWORD } from '../../data/users'
 import { PRODUCTS } from '../../data/products'
+import { CHECKOUT_ERROR_MESSAGES } from '../../data/checkout-error-messages'
+
+const CHECKOUT_ACCOUNT = {
+  firstName: 'Ada',
+  lastName: 'Lovelace',
+  postalCode: '12345',
+}
 
 test.describe('Checkout', () => {
   let inventory: InventoryPage
@@ -33,7 +40,11 @@ test.describe('Checkout', () => {
 
   async function reachOverview(...names: string[]) {
     await reachStepOne(...names)
-    await checkout.fillInfo('Ada', 'Lovelace', '12345')
+    await checkout.fillInfo(
+      CHECKOUT_ACCOUNT.firstName,
+      CHECKOUT_ACCOUNT.lastName,
+      CHECKOUT_ACCOUNT.postalCode
+    )
     await checkout.continue()
     await checkout.expectOnStepTwo()
   }
@@ -60,24 +71,24 @@ test.describe('Checkout', () => {
   test('continue with an empty form shows First Name is required', async () => {
     await reachStepOne()
     await checkout.continue()
-    await expect(checkout.errorMessage).toContainText('Error: First Name is required')
+    await expect(checkout.errorMessage).toContainText(CHECKOUT_ERROR_MESSAGES.firstNameRequired)
   })
 
   // 5
   test('continue with only first name shows Last Name is required', async () => {
     await reachStepOne()
-    await checkout.firstName.fill('Ada')
+    await checkout.firstName.fill(CHECKOUT_ACCOUNT.firstName)
     await checkout.continue()
-    await expect(checkout.errorMessage).toContainText('Error: Last Name is required')
+    await expect(checkout.errorMessage).toContainText(CHECKOUT_ERROR_MESSAGES.lastNameRequired)
   })
 
   // 6
   test('continue with first and last but no postal shows Postal Code is required', async () => {
     await reachStepOne()
-    await checkout.firstName.fill('Ada')
-    await checkout.lastName.fill('Lovelace')
+    await checkout.firstName.fill(CHECKOUT_ACCOUNT.firstName)
+    await checkout.lastName.fill(CHECKOUT_ACCOUNT.lastName)
     await checkout.continue()
-    await expect(checkout.errorMessage).toContainText('Error: Postal Code is required')
+    await expect(checkout.errorMessage).toContainText(CHECKOUT_ERROR_MESSAGES.postalCodeRequired)
   })
 
   // 7
@@ -85,14 +96,18 @@ test.describe('Checkout', () => {
     await reachStepOne()
     await checkout.continue()
     await expect(checkout.errorMessage).toBeVisible()
-    await checkout.page.getByTestId('error-button').click()
+    await checkout.dismissError()
     await expect(checkout.errorMessage).toHaveCount(0)
   })
 
   // 8
   test('filling all three fields and continuing goes to the overview', async () => {
     await reachStepOne()
-    await checkout.fillInfo('Ada', 'Lovelace', '12345')
+    await checkout.fillInfo(
+      CHECKOUT_ACCOUNT.firstName,
+      CHECKOUT_ACCOUNT.lastName,
+      CHECKOUT_ACCOUNT.postalCode
+    )
     await checkout.continue()
     await expect(checkout.page).toHaveURL(/checkout-step-two\.html/)
   })
@@ -115,7 +130,7 @@ test.describe('Checkout', () => {
   // 11
   test('overview lists the added item', async () => {
     await reachOverview()
-    await expect(cart.items.getByTestId('inventory-item-name')).toHaveText(PRODUCTS.backpack.name)
+    await cart.expectItemNames([PRODUCTS.backpack.name])
   })
 
   // 12
@@ -203,7 +218,7 @@ test.describe('Checkout', () => {
   // 23
   test('two items: overview shows two line items', async () => {
     await reachOverview(PRODUCTS.backpack.name, PRODUCTS.bikeLight.name)
-    await expect(cart.items).toHaveCount(2)
+    await cart.expectItemCount(2)
   })
 
   // 24
@@ -218,15 +233,15 @@ test.describe('Checkout', () => {
   // 25
   test('overview shows the correct single line item count', async () => {
     await reachOverview()
-    await expect(cart.items).toHaveCount(1)
+    await cart.expectItemCount(1)
   })
 
   // 26
   test('backpack price appears on the overview', async () => {
     await reachOverview()
-    const line = cart.items.filter({ hasText: PRODUCTS.backpack.name })
-    await expect(line.getByTestId('inventory-item-price')).toHaveText(
-      `$${PRODUCTS.backpack.price.toFixed(2)}`
+    expect(await cart.itemPriceByName(PRODUCTS.backpack.name)).toBeCloseTo(
+      PRODUCTS.backpack.price,
+      2
     )
   })
 

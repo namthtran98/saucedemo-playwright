@@ -9,6 +9,7 @@ export class CheckoutPage {
   readonly cancelButton: Locator
   readonly finishButton: Locator
   readonly errorMessage: Locator
+  readonly errorButton: Locator
   readonly itemTotalLabel: Locator
   readonly taxLabel: Locator
   readonly totalLabel: Locator
@@ -24,6 +25,7 @@ export class CheckoutPage {
     this.cancelButton = page.getByTestId('cancel')
     this.finishButton = page.getByTestId('finish')
     this.errorMessage = page.getByTestId('error')
+    this.errorButton = page.getByTestId('error-button')
     this.itemTotalLabel = page.getByTestId('subtotal-label')
     this.taxLabel = page.getByTestId('tax-label')
     this.totalLabel = page.getByTestId('total-label')
@@ -47,6 +49,10 @@ export class CheckoutPage {
 
   async cancel() {
     await this.cancelButton.click()
+  }
+
+  async dismissError() {
+    await this.errorButton.click()
   }
 
   async itemTotalValue(): Promise<number> {

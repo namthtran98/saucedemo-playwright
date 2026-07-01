@@ -3,6 +3,8 @@ import { type Page, type Locator, expect } from '@playwright/test'
 export class CartPage {
   readonly page: Page
   readonly items: Locator
+  readonly itemNameLabels: Locator
+  readonly itemPriceLabels: Locator
   readonly checkoutButton: Locator
   readonly continueShoppingButton: Locator
   readonly badge: Locator
@@ -10,6 +12,8 @@ export class CartPage {
   constructor(page: Page) {
     this.page = page
     this.items = page.getByTestId('inventory-item')
+    this.itemNameLabels = page.getByTestId('inventory-item-name')
+    this.itemPriceLabels = page.getByTestId('inventory-item-price')
     this.checkoutButton = page.getByTestId('checkout')
     this.continueShoppingButton = page.getByTestId('continue-shopping')
     this.badge = page.getByTestId('shopping-cart-badge')
@@ -20,7 +24,21 @@ export class CartPage {
   }
 
   async itemNames(): Promise<string[]> {
-    return this.page.getByTestId('inventory-item-name').allInnerTexts()
+    return this.itemNameLabels.allInnerTexts()
+  }
+
+  async itemPriceByName(name: string): Promise<number> {
+    const names = await this.itemNameLabels.allInnerTexts()
+    const index = names.indexOf(name)
+    if (index === -1) {
+      throw new Error(`Cart item not found: ${name}`)
+    }
+    const text = await this.itemPriceLabels.nth(index).innerText()
+    return Number(text.replace(/^\$/, ''))
+  }
+
+  async expectItemNames(names: string[]) {
+    await expect(this.itemNameLabels).toHaveText(names)
   }
 
   async removeByName(name: string) {
