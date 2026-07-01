@@ -4,11 +4,7 @@ import { InventoryPage } from '../../page-objects/InventoryPage'
 import { CartPage } from '../../page-objects/CartPage'
 import { CheckoutPage } from '../../page-objects/CheckoutPage'
 import { USERS, PASSWORD } from '../../data/users'
-
-const BACKPACK = 'Sauce Labs Backpack'
-const BIKE_LIGHT = 'Sauce Labs Bike Light'
-const BACKPACK_PRICE = 29.99
-const BIKE_LIGHT_PRICE = 9.99
+import { PRODUCTS } from '../../data/products'
 
 test.describe('Checkout', () => {
   let inventory: InventoryPage
@@ -26,7 +22,7 @@ test.describe('Checkout', () => {
   })
 
   async function reachStepOne(...names: string[]) {
-    const items = names.length ? names : [BACKPACK]
+    const items = names.length ? names : [PRODUCTS.backpack.name]
     for (const name of items) {
       await inventory.addToCartByName(name)
     }
@@ -119,7 +115,7 @@ test.describe('Checkout', () => {
   // 11
   test('overview lists the added item', async () => {
     await reachOverview()
-    await expect(cart.items.getByTestId('inventory-item-name')).toHaveText(BACKPACK)
+    await expect(cart.items.getByTestId('inventory-item-name')).toHaveText(PRODUCTS.backpack.name)
   })
 
   // 12
@@ -177,7 +173,7 @@ test.describe('Checkout', () => {
   // 19
   test('item total equals the single item price', async () => {
     await reachOverview()
-    expect(await checkout.itemTotalValue()).toBeCloseTo(BACKPACK_PRICE, 2)
+    expect(await checkout.itemTotalValue()).toBeCloseTo(PRODUCTS.backpack.price, 2)
   })
 
   // 20
@@ -197,13 +193,16 @@ test.describe('Checkout', () => {
 
   // 22
   test('two items: item total equals the sum of the two prices', async () => {
-    await reachOverview(BACKPACK, BIKE_LIGHT)
-    expect(await checkout.itemTotalValue()).toBeCloseTo(BACKPACK_PRICE + BIKE_LIGHT_PRICE, 2)
+    await reachOverview(PRODUCTS.backpack.name, PRODUCTS.bikeLight.name)
+    expect(await checkout.itemTotalValue()).toBeCloseTo(
+      PRODUCTS.backpack.price + PRODUCTS.bikeLight.price,
+      2
+    )
   })
 
   // 23
   test('two items: overview shows two line items', async () => {
-    await reachOverview(BACKPACK, BIKE_LIGHT)
+    await reachOverview(PRODUCTS.backpack.name, PRODUCTS.bikeLight.name)
     await expect(cart.items).toHaveCount(2)
   })
 
@@ -225,8 +224,10 @@ test.describe('Checkout', () => {
   // 26
   test('backpack price appears on the overview', async () => {
     await reachOverview()
-    const line = cart.items.filter({ hasText: BACKPACK })
-    await expect(line.getByTestId('inventory-item-price')).toHaveText('$29.99')
+    const line = cart.items.filter({ hasText: PRODUCTS.backpack.name })
+    await expect(line.getByTestId('inventory-item-price')).toHaveText(
+      `$${PRODUCTS.backpack.price.toFixed(2)}`
+    )
   })
 
   // 27
