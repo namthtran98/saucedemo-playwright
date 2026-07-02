@@ -1,73 +1,73 @@
-import { test, expect } from '@playwright/test'
-import { LoginPage } from '../../page-objects/LoginPage'
+import { test, expect } from '../../fixtures/test-fixtures'
 import { InventoryPage } from '../../page-objects/InventoryPage'
 import { ProductDetailPage } from '../../page-objects/ProductDetailPage'
 import { CartPage } from '../../page-objects/CartPage'
-import { USERS, PASSWORD } from '../../data/users'
-import { ALL_PRODUCTS, PRODUCTS } from '../../data/products'
-
-const ALL_PRODUCT_NAMES = ALL_PRODUCTS.map((product) => product.name)
+import { CheckoutPage } from '../../page-objects/CheckoutPage'
+import { PRODUCTS, PRODUCT_NAMES } from '../../data/products'
 
 test.describe('Cart', () => {
   let inventory: InventoryPage
   let cart: CartPage
 
-  test.beforeEach(async ({ page }) => {
-    const login = new LoginPage(page)
-    await login.goto()
-    await login.login(USERS.standard, PASSWORD)
-    inventory = new InventoryPage(page)
-    await inventory.expectLoaded()
-    cart = new CartPage(page)
+  test.beforeEach(async ({ loggedInPage }) => {
+    inventory = loggedInPage
+    cart = new CartPage(inventory.page)
   })
+
+  async function expectCartBadgeCount(count: number) {
+    if (count === 0) {
+      await expect(cart.badge).toHaveCount(0)
+    } else {
+      await expect(cart.badge).toHaveText(String(count))
+    }
+  }
 
   // 1
   test('cart is empty right after login', async () => {
     await cart.goto()
-    await cart.expectItemCount(0)
+    await expect(cart.items).toHaveCount(0)
   })
 
   // 2
-  test('continue shopping returns to the inventory page', async ({ page }) => {
+  test('continue shopping returns to the inventory page', async () => {
     await cart.goto()
     await cart.continueShopping()
-    await expect(page).toHaveURL(/inventory\.html/)
-    await expect(inventory.title).toBeVisible()
+    await inventory.expectLoaded()
   })
 
   // 3
   test('checkout button is visible in the cart', async () => {
     await cart.goto()
-    await expect(cart.checkoutButton).toBeVisible()
+    await cart.expectLoaded()
   })
 
   // 4
   test('add one item then the cart shows 1 item', async () => {
     await inventory.addToCartByName(PRODUCTS.backpack.name)
     await cart.goto()
-    await cart.expectItemCount(1)
+    await expect(cart.items).toHaveCount(1)
   })
 
   // 5
   test('the cart item has the expected name', async () => {
     await inventory.addToCartByName(PRODUCTS.backpack.name)
     await cart.goto()
-    await cart.expectItemName(PRODUCTS.backpack.name)
+    await expect(cart.itemNameLabels).toHaveText(PRODUCTS.backpack.name)
   })
 
   // 6
   test('the cart item shows a price', async () => {
     await inventory.addToCartByName(PRODUCTS.backpack.name)
     await cart.goto()
-    await cart.expectItemPriceVisible()
-    await cart.expectItemPriceFormat()
+    await expect(cart.itemPriceLabels).toBeVisible()
+    await expect(cart.itemPriceLabels).toHaveText(/\$\d+\.\d{2}/)
   })
 
   // 7
   test('the cart item quantity is 1', async () => {
     await inventory.addToCartByName(PRODUCTS.backpack.name)
     await cart.goto()
-    await cart.expectItemQuantity('1')
+    await expect(cart.itemQuantityLabels).toHaveText('1')
   })
 
   // 8
@@ -75,25 +75,25 @@ test.describe('Cart', () => {
     await inventory.addToCartByName(PRODUCTS.backpack.name)
     await inventory.addToCartByName(PRODUCTS.bikeLight.name)
     await cart.goto()
-    await cart.expectItemCount(2)
+    await expect(cart.items).toHaveCount(2)
   })
 
   // 9
   test('add all six items then the cart shows 6 items', async () => {
-    for (const name of ALL_PRODUCT_NAMES) {
+    for (const name of PRODUCT_NAMES) {
       await inventory.addToCartByName(name)
     }
     await cart.goto()
-    await cart.expectItemCount(ALL_PRODUCT_NAMES.length)
+    await expect(cart.items).toHaveCount(PRODUCT_NAMES.length)
   })
 
   // 10
   test('remove the only item empties the cart', async () => {
     await inventory.addToCartByName(PRODUCTS.backpack.name)
     await cart.goto()
-    await cart.expectItemCount(1)
+    await expect(cart.items).toHaveCount(1)
     await cart.removeByName(PRODUCTS.backpack.name)
-    await cart.expectItemCount(0)
+    await expect(cart.items).toHaveCount(0)
   })
 
   // 11
@@ -101,10 +101,10 @@ test.describe('Cart', () => {
     await inventory.addToCartByName(PRODUCTS.backpack.name)
     await inventory.addToCartByName(PRODUCTS.bikeLight.name)
     await cart.goto()
-    await cart.expectItemCount(2)
+    await expect(cart.items).toHaveCount(2)
     await cart.removeByName(PRODUCTS.backpack.name)
-    await cart.expectItemCount(1)
-    await cart.expectItemName(PRODUCTS.bikeLight.name)
+    await expect(cart.items).toHaveCount(1)
+    await expect(cart.itemNameLabels).toHaveText(PRODUCTS.bikeLight.name)
   })
 
   // 12
@@ -113,15 +113,16 @@ test.describe('Cart', () => {
     await inventory.addToCartByName(PRODUCTS.bikeLight.name)
     await inventory.addToCartByName(PRODUCTS.boltTShirt.name)
     await cart.goto()
-    await expect(cart.badge).toHaveText('3')
+    await expectCartBadgeCount(3)
   })
 
   // 13
-  test('checkout navigates to checkout step one', async ({ page }) => {
+  test('checkout navigates to checkout step one', async () => {
     await inventory.addToCartByName(PRODUCTS.backpack.name)
     await cart.goto()
     await cart.checkout()
-    await expect(page).toHaveURL(/checkout-step-one\.html/)
+    const checkout = new CheckoutPage(cart.page)
+    await checkout.expectStepOneLoaded()
   })
 
   // 14
@@ -131,8 +132,8 @@ test.describe('Cart', () => {
     await cart.continueShopping()
     await inventory.expectLoaded()
     await cart.goto()
-    await cart.expectItemCount(1)
-    await cart.expectItemName(PRODUCTS.backpack.name)
+    await expect(cart.items).toHaveCount(1)
+    await expect(cart.itemNameLabels).toHaveText(PRODUCTS.backpack.name)
   })
 
   // 15
@@ -140,19 +141,19 @@ test.describe('Cart', () => {
     await inventory.addToCartByName(PRODUCTS.backpack.name)
     await inventory.addToCartByName(PRODUCTS.bikeLight.name)
     await cart.goto()
-    await expect(cart.badge).toHaveText('2')
+    await expectCartBadgeCount(2)
     await cart.removeByName(PRODUCTS.backpack.name)
-    await expect(cart.badge).toHaveText('1')
+    await expectCartBadgeCount(1)
   })
 
   // 16
   test('each distinct product appears exactly once in the cart', async () => {
-    for (const name of ALL_PRODUCT_NAMES) {
+    for (const name of PRODUCT_NAMES) {
       await inventory.addToCartByName(name)
     }
     await cart.goto()
     const names = await cart.itemNames()
-    expect(names.sort()).toEqual([...ALL_PRODUCT_NAMES].sort())
+    expect(names.sort()).toEqual([...PRODUCT_NAMES].sort())
     expect(new Set(names).size).toBe(names.length)
   })
 
@@ -160,21 +161,20 @@ test.describe('Cart', () => {
   test('the Backpack price in the cart is $29.99', async () => {
     await inventory.addToCartByName(PRODUCTS.backpack.name)
     await cart.goto()
-    await cart.expectItemPrice(PRODUCTS.backpack.name, PRODUCTS.backpack.price)
+    expect(await cart.itemPriceByName(PRODUCTS.backpack.name)).toBeCloseTo(PRODUCTS.backpack.price, 2)
   })
 
   // 18
   test('an empty cart has no remove buttons', async () => {
     await cart.goto()
-    await cart.expectItemCount(0)
-    await cart.expectNoRemoveButtons()
+    await expect(cart.items).toHaveCount(0)
+    await expect(cart.removeButtons).toHaveCount(0)
   })
 
   // 19
-  test('the cart link from inventory opens the cart page', async ({ page }) => {
-    await inventory.cartLink.click()
-    await expect(page).toHaveURL(/cart\.html/)
-    await expect(cart.checkoutButton).toBeVisible()
+  test('the cart link from inventory opens the cart page', async () => {
+    await inventory.openCart()
+    await cart.expectLoaded()
   })
 
   // 20
@@ -182,17 +182,17 @@ test.describe('Cart', () => {
     await inventory.addToCartByName(PRODUCTS.backpack.name)
     await inventory.addToCartByName(PRODUCTS.bikeLight.name)
     await cart.goto()
-    await cart.expectItemQuantities(['1', '1'])
+    await expect(cart.itemQuantityLabels).toHaveText(['1', '1'])
   })
 
   // 21
-  test('adding from the product detail page then opening the cart shows the item', async ({ page }) => {
+  test('adding from the product detail page then opening the cart shows the item', async () => {
     await inventory.openProductByName(PRODUCTS.backpack.name)
-    const detail = new ProductDetailPage(page)
+    const detail = new ProductDetailPage(inventory.page)
     await detail.addToCart()
     await cart.goto()
-    await cart.expectItemCount(1)
-    await cart.expectItemName(PRODUCTS.backpack.name)
+    await expect(cart.items).toHaveCount(1)
+    await expect(cart.itemNameLabels).toHaveText(PRODUCTS.backpack.name)
   })
 
   // 22
@@ -203,7 +203,7 @@ test.describe('Cart', () => {
     await inventory.expectLoaded()
     await inventory.addToCartByName(PRODUCTS.bikeLight.name)
     await cart.goto()
-    await cart.expectItemCount(2)
+    await expect(cart.items).toHaveCount(2)
   })
 
   // 23
@@ -211,10 +211,10 @@ test.describe('Cart', () => {
     await inventory.addToCartByName(PRODUCTS.backpack.name)
     await inventory.addToCartByName(PRODUCTS.bikeLight.name)
     await cart.goto()
-    await expect(cart.badge).toHaveText('2')
+    await expectCartBadgeCount(2)
     await cart.removeByName(PRODUCTS.backpack.name)
     await cart.removeByName(PRODUCTS.bikeLight.name)
-    await cart.expectItemCount(0)
-    await expect(cart.badge).toHaveCount(0)
+    await expect(cart.items).toHaveCount(0)
+    await expectCartBadgeCount(0)
   })
 })

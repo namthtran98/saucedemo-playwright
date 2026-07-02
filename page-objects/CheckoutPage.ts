@@ -1,4 +1,4 @@
-import { type Page, type Locator, expect } from '@playwright/test'
+import { expect, type Page, type Locator } from '@playwright/test'
 
 export class CheckoutPage {
   readonly page: Page
@@ -39,6 +39,34 @@ export class CheckoutPage {
     await this.postalCode.fill(zip)
   }
 
+  async fillFirstName(first: string) {
+    await this.firstName.fill(first)
+  }
+
+  async fillFirstAndLast(first: string, last: string) {
+    await this.firstName.fill(first)
+    await this.lastName.fill(last)
+  }
+
+  async expectStepOneLoaded() {
+    await expect(this.page).toHaveURL(/checkout-step-one\.html/)
+    await expect(this.firstName).toBeVisible()
+    await expect(this.lastName).toBeVisible()
+    await expect(this.postalCode).toBeVisible()
+  }
+
+  async expectOverviewLoaded() {
+    await expect(this.page).toHaveURL(/checkout-step-two\.html/)
+    await expect(this.itemTotalLabel).toBeVisible()
+    await expect(this.finishButton).toBeVisible()
+  }
+
+  async expectCompleteLoaded() {
+    await expect(this.page).toHaveURL(/checkout-complete\.html/)
+    await expect(this.completeHeader).toBeVisible()
+    await expect(this.backHomeButton).toBeVisible()
+  }
+
   async continue() {
     await this.continueButton.click()
   }
@@ -55,6 +83,10 @@ export class CheckoutPage {
     await this.errorButton.click()
   }
 
+  async backHome() {
+    await this.backHomeButton.click()
+  }
+
   async itemTotalValue(): Promise<number> {
     const text = await this.itemTotalLabel.innerText()
     return Number(text.replace('Item total: $', '').trim())
@@ -68,17 +100,5 @@ export class CheckoutPage {
   async totalValue(): Promise<number> {
     const text = await this.totalLabel.innerText()
     return Number(text.replace('Total: $', '').trim())
-  }
-
-  async expectOnStepOne() {
-    await expect(this.page).toHaveURL(/checkout-step-one\.html/)
-  }
-
-  async expectOnStepTwo() {
-    await expect(this.page).toHaveURL(/checkout-step-two\.html/)
-  }
-
-  async expectOnComplete() {
-    await expect(this.page).toHaveURL(/checkout-complete\.html/)
   }
 }

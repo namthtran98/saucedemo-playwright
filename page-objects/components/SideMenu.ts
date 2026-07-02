@@ -1,4 +1,4 @@
-import { type Page, type Locator, expect } from '@playwright/test'
+import { expect, type Page, type Locator } from '@playwright/test'
 
 export class SideMenu {
   readonly page: Page
@@ -21,7 +21,7 @@ export class SideMenu {
     await this.openButton.click()
   }
 
-  async expectLinksVisible() {
+  async expectLoaded() {
     await expect(this.allItemsLink).toBeVisible()
     await expect(this.aboutLink).toBeVisible()
     await expect(this.logoutLink).toBeVisible()

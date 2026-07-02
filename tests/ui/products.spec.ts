@@ -1,57 +1,54 @@
-import { test, expect } from '@playwright/test'
-import { LoginPage } from '../../page-objects/LoginPage'
+import { test, expect } from '../../fixtures/test-fixtures'
+import { CartPage } from '../../page-objects/CartPage'
 import { InventoryPage } from '../../page-objects/InventoryPage'
 import { ProductDetailPage } from '../../page-objects/ProductDetailPage'
-import { USERS, PASSWORD } from '../../data/users'
+import { INVENTORY_UI_TEXT, PRODUCTS, PRODUCT_COUNT, PRODUCT_NAMES } from '../../data/products'
 
 test.describe('Products', () => {
   let inventory: InventoryPage
 
-  test.beforeEach(async ({ page }) => {
-    const login = new LoginPage(page)
-    await login.goto()
-    await login.login(USERS.standard, PASSWORD)
-    inventory = new InventoryPage(page)
-    await inventory.expectLoaded()
+  test.beforeEach(async ({ loggedInPage }) => {
+    inventory = loggedInPage
   })
+
+  async function expectCartCount(count: number) {
+    if (count === 0) {
+      await expect(inventory.cartBadge).toHaveCount(0)
+    } else {
+      await expect(inventory.cartBadge).toHaveText(String(count))
+    }
+  }
 
   // 1
   test('inventory page shows the Products title', async () => {
-    await expect(inventory.title).toBeVisible()
+    await inventory.expectLoaded()
   })
 
   // 2
   test('exactly 6 products are listed', async () => {
-    await expect(inventory.items).toHaveCount(6)
+    await expect(inventory.items).toHaveCount(PRODUCT_COUNT)
   })
 
   // 3
-  test('every product has a visible name', async ({ page }) => {
-    const names = page.getByTestId('inventory-item-name')
-    await expect(names).toHaveCount(6)
-    const count = await names.count()
-    for (let i = 0; i < count; i++) {
-      await expect(names.nth(i)).toBeVisible()
+  test('every product has a visible name', async () => {
+    await expect(inventory.itemNameLabels).toHaveCount(PRODUCT_COUNT)
+    for (let index = 0; index < PRODUCT_COUNT; index++) {
+      await expect(inventory.itemNameLabels.nth(index)).toBeVisible()
     }
   })
 
   // 4
-  test('every product has a visible price', async ({ page }) => {
-    const prices = page.getByTestId('inventory-item-price')
-    await expect(prices).toHaveCount(6)
-    const count = await prices.count()
-    for (let i = 0; i < count; i++) {
-      await expect(prices.nth(i)).toBeVisible()
+  test('every product has a visible price', async () => {
+    await expect(inventory.itemPriceLabels).toHaveCount(PRODUCT_COUNT)
+    for (let index = 0; index < PRODUCT_COUNT; index++) {
+      await expect(inventory.itemPriceLabels.nth(index)).toBeVisible()
     }
   })
 
   // 5
   test('every product has an Add to cart button', async () => {
-    const count = await inventory.items.count()
-    for (let i = 0; i < count; i++) {
-      await expect(
-        inventory.items.nth(i).getByRole('button', { name: /add to cart/i }),
-      ).toBeVisible()
+    for (let index = 0; index < PRODUCT_COUNT; index++) {
+      await expect(inventory.addToCartButtonAt(index)).toBeVisible()
     }
   })
 
@@ -89,113 +86,115 @@ test.describe('Products', () => {
 
   // 10
   test('add Sauce Labs Backpack updates cart badge to 1', async () => {
-    await inventory.addToCartByName('Sauce Labs Backpack')
-    await inventory.expectCartCount(1)
+    await inventory.addToCartByName(PRODUCTS.backpack.name)
+    await expectCartCount(1)
   })
 
   // 11
   test('add two products updates cart badge to 2', async () => {
-    await inventory.addToCartByName('Sauce Labs Backpack')
-    await inventory.addToCartByName('Sauce Labs Bike Light')
-    await inventory.expectCartCount(2)
+    await inventory.addToCartByName(PRODUCTS.backpack.name)
+    await inventory.addToCartByName(PRODUCTS.bikeLight.name)
+    await expectCartCount(2)
   })
 
   // 12
   test('add then the button becomes Remove', async () => {
-    await inventory.addToCartByName('Sauce Labs Backpack')
-    const item = inventory.items.filter({ hasText: 'Sauce Labs Backpack' })
-    await expect(item.getByRole('button', { name: /remove/i })).toBeVisible()
+    await inventory.addToCartByName(PRODUCTS.backpack.name)
+    await expect(inventory.removeButtonByName(PRODUCTS.backpack.name)).toBeVisible()
   })
 
   // 13
   test('remove a product updates the badge back to empty', async () => {
-    await inventory.addToCartByName('Sauce Labs Backpack')
-    await inventory.expectCartCount(1)
-    await inventory.removeFromCartByName('Sauce Labs Backpack')
-    await inventory.expectCartCount(0)
+    await inventory.addToCartByName(PRODUCTS.backpack.name)
+    await expectCartCount(1)
+    await inventory.removeFromCartByName(PRODUCTS.backpack.name)
+    await expectCartCount(0)
   })
 
   // 14
   test('add all six products shows badge 6', async () => {
-    const names = await inventory.productNames()
-    for (const name of names) {
+    for (const name of PRODUCT_NAMES) {
       await inventory.addToCartByName(name)
     }
-    await inventory.expectCartCount(6)
+    await expectCartCount(PRODUCT_COUNT)
   })
 
   // 15
-  test('cart link navigates to the cart page', async ({ page }) => {
-    await inventory.cartLink.click()
-    await expect(page).toHaveURL(/cart\.html/)
+  test('cart link navigates to the cart page', async () => {
+    await inventory.openCart()
+    const cart = new CartPage(inventory.page)
+    await cart.expectLoaded()
   })
 
   // 16
-  test('open a product opens its detail page', async ({ page }) => {
-    await inventory.openProductByName('Sauce Labs Backpack')
-    await expect(page).toHaveURL(/inventory-item\.html/)
+  test('open a product opens its detail page', async () => {
+    await inventory.openProductByName(PRODUCTS.backpack.name)
+    const detail = new ProductDetailPage(inventory.page)
+    await detail.expectLoaded()
   })
 
   // 17
   test('product detail shows the correct name', async () => {
-    await inventory.openProductByName('Sauce Labs Backpack')
+    await inventory.openProductByName(PRODUCTS.backpack.name)
     const detail = new ProductDetailPage(inventory.page)
-    await detail.expectName('Sauce Labs Backpack')
+    await detail.expectLoaded()
+    await expect(detail.name).toHaveText(PRODUCTS.backpack.name)
   })
 
   // 18
   test('product detail shows a price', async () => {
-    await inventory.openProductByName('Sauce Labs Backpack')
+    await inventory.openProductByName(PRODUCTS.backpack.name)
     const detail = new ProductDetailPage(inventory.page)
+    await detail.expectLoaded()
     await expect(detail.price).toBeVisible()
     await expect(detail.price).toHaveText(/\$\d+\.\d{2}/)
   })
 
   // 19
-  test('back button returns to the inventory page', async ({ page }) => {
-    await inventory.openProductByName('Sauce Labs Backpack')
-    const detail = new ProductDetailPage(page)
+  test('back button returns to the inventory page', async () => {
+    await inventory.openProductByName(PRODUCTS.backpack.name)
+    const detail = new ProductDetailPage(inventory.page)
     await detail.goBack()
-    await expect(page).toHaveURL(/inventory\.html/)
-    await expect(inventory.title).toBeVisible()
+    await inventory.expectLoaded()
   })
 
   // 20
-  test('add to cart from the detail page updates the badge', async ({ page }) => {
-    await inventory.openProductByName('Sauce Labs Backpack')
-    const detail = new ProductDetailPage(page)
+  test('add to cart from the detail page updates the badge', async () => {
+    await inventory.openProductByName(PRODUCTS.backpack.name)
+    const detail = new ProductDetailPage(inventory.page)
     await detail.addToCart()
-    await expect(inventory.cartBadge).toHaveText('1')
+    await expectCartCount(1)
   })
 
   // 21
-  test('cart badge persists from inventory to detail page', async ({ page }) => {
-    await inventory.addToCartByName('Sauce Labs Backpack')
-    await inventory.expectCartCount(1)
-    await inventory.openProductByName('Sauce Labs Backpack')
-    await expect(page).toHaveURL(/inventory-item\.html/)
-    await expect(inventory.cartBadge).toHaveText('1')
+  test('cart badge persists from inventory to detail page', async () => {
+    await inventory.addToCartByName(PRODUCTS.backpack.name)
+    await expectCartCount(1)
+    await inventory.openProductByName(PRODUCTS.backpack.name)
+    const detail = new ProductDetailPage(inventory.page)
+    await detail.expectLoaded()
+    await expectCartCount(1)
   })
 
   // 22
   test('open menu shows the All Items, About, Logout, Reset links', async () => {
     await inventory.sideMenu.open()
-    await inventory.sideMenu.expectLinksVisible()
+    await inventory.sideMenu.expectLoaded()
   })
 
   // 23
   test('reset app state clears the cart badge after adding an item', async () => {
-    await inventory.addToCartByName('Sauce Labs Backpack')
-    await inventory.expectCartCount(1)
+    await inventory.addToCartByName(PRODUCTS.backpack.name)
+    await expectCartCount(1)
     await inventory.sideMenu.resetAppState()
-    await inventory.expectCartCount(0)
+    await expectCartCount(0)
   })
 
   // 24
-  test('footer shows the Sauce Labs copyright and three social links', async ({ page }) => {
-    await expect(page.getByTestId('footer-copy')).toContainText('Sauce Labs')
-    await expect(page.getByTestId('social-twitter')).toBeVisible()
-    await expect(page.getByTestId('social-facebook')).toBeVisible()
-    await expect(page.getByTestId('social-linkedin')).toBeVisible()
+  test('footer shows the Sauce Labs copyright and three social links', async () => {
+    await expect(inventory.footerCopy).toContainText(INVENTORY_UI_TEXT.footerCopy)
+    await expect(inventory.twitterLink).toBeVisible()
+    await expect(inventory.facebookLink).toBeVisible()
+    await expect(inventory.linkedInLink).toBeVisible()
   })
 })

@@ -15,3 +15,8 @@ export const PRODUCTS = {
 } as const satisfies Record<string, Product>
 
 export const ALL_PRODUCTS: Product[] = Object.values(PRODUCTS)
+export const PRODUCT_NAMES = ALL_PRODUCTS.map((product) => product.name)
+export const PRODUCT_COUNT = ALL_PRODUCTS.length
+export const INVENTORY_UI_TEXT = {
+  footerCopy: 'Sauce Labs',
+} as const

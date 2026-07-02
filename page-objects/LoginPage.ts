@@ -1,4 +1,4 @@
-import { type Page, type Locator, expect } from '@playwright/test'
+import { expect, type Page, type Locator } from '@playwright/test'
 
 export class LoginPage {
   readonly page: Page
@@ -21,18 +21,16 @@ export class LoginPage {
     await this.page.goto('/')
   }
 
+  async expectLoaded() {
+    await expect(this.username).toBeVisible()
+    await expect(this.password).toBeVisible()
+    await expect(this.loginButton).toBeVisible()
+  }
+
   async login(user: string, pass: string) {
     await this.username.fill(user)
     await this.password.fill(pass)
     await this.loginButton.click()
-  }
-
-  async expectLoggedIn() {
-    await expect(this.page).toHaveURL(/inventory\.html/)
-  }
-
-  async expectError(message: string | RegExp) {
-    await expect(this.error).toContainText(message)
   }
 
   async dismissError() {

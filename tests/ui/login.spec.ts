@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { LoginPage } from '../../page-objects/LoginPage'
 import { InventoryPage } from '../../page-objects/InventoryPage'
-import { USERS, PASSWORD } from '../../data/users'
+import { EMPTY_CREDENTIAL, INVALID_PASSWORD, PASSWORD, UNKNOWN_USER, USERS } from '../../data/users'
 import { LOGIN_ERROR_MESSAGES } from '../../data/checkout-error-messages'
 
 test.describe('Login', () => {
@@ -15,77 +15,75 @@ test.describe('Login', () => {
   })
 
   test('login form is visible', async () => {
-    await expect(login.username).toBeVisible()
-    await expect(login.password).toBeVisible()
-    await expect(login.loginButton).toBeVisible()
+    await login.expectLoaded()
   })
 
   test('standard_user logs in successfully', async () => {
     await login.login(USERS.standard, PASSWORD)
-    await login.expectLoggedIn()
+    await inventory.expectLoaded()
   })
 
   test('problem_user logs in successfully', async () => {
     await login.login(USERS.problem, PASSWORD)
-    await login.expectLoggedIn()
+    await inventory.expectLoaded()
   })
 
   test('performance_glitch_user logs in successfully', async () => {
     await login.login(USERS.glitch, PASSWORD)
-    await login.expectLoggedIn()
+    await inventory.expectLoaded()
   })
 
   test('error_user logs in successfully', async () => {
     await login.login(USERS.error, PASSWORD)
-    await login.expectLoggedIn()
+    await inventory.expectLoaded()
   })
 
   test('visual_user logs in successfully', async () => {
     await login.login(USERS.visual, PASSWORD)
-    await login.expectLoggedIn()
+    await inventory.expectLoaded()
   })
 
   test('locked_out_user is rejected', async () => {
     await login.login(USERS.lockedOut, PASSWORD)
-    await login.expectError(LOGIN_ERROR_MESSAGES.lockedOut)
+    await expect(login.error).toContainText(LOGIN_ERROR_MESSAGES.lockedOut)
   })
 
   test('wrong password is rejected', async () => {
-    await login.login(USERS.standard, 'wrong_password')
-    await login.expectError(LOGIN_ERROR_MESSAGES.invalidCredentials)
+    await login.login(USERS.standard, INVALID_PASSWORD)
+    await expect(login.error).toContainText(LOGIN_ERROR_MESSAGES.invalidCredentials)
   })
 
   test('unknown user is rejected', async () => {
-    await login.login('no_such_user', PASSWORD)
-    await login.expectError(LOGIN_ERROR_MESSAGES.invalidCredentials)
+    await login.login(UNKNOWN_USER, PASSWORD)
+    await expect(login.error).toContainText(LOGIN_ERROR_MESSAGES.invalidCredentials)
   })
 
   test('empty username shows required error', async () => {
-    await login.login('', PASSWORD)
-    await login.expectError(LOGIN_ERROR_MESSAGES.usernameRequired)
+    await login.login(EMPTY_CREDENTIAL, PASSWORD)
+    await expect(login.error).toContainText(LOGIN_ERROR_MESSAGES.usernameRequired)
   })
 
   test('empty password shows required error', async () => {
-    await login.login(USERS.standard, '')
-    await login.expectError(LOGIN_ERROR_MESSAGES.passwordRequired)
+    await login.login(USERS.standard, EMPTY_CREDENTIAL)
+    await expect(login.error).toContainText(LOGIN_ERROR_MESSAGES.passwordRequired)
   })
 
   test('empty form shows username required error', async () => {
     await login.loginButton.click()
-    await login.expectError(LOGIN_ERROR_MESSAGES.usernameRequired)
+    await expect(login.error).toContainText(LOGIN_ERROR_MESSAGES.usernameRequired)
   })
 
   test('error message can be dismissed', async () => {
     await login.login(USERS.lockedOut, PASSWORD)
-    await login.expectError(LOGIN_ERROR_MESSAGES.lockedOut)
+    await expect(login.error).toContainText(LOGIN_ERROR_MESSAGES.lockedOut)
     await login.dismissError()
     await expect(login.error).toHaveCount(0)
   })
 
   test('successful login then logout returns to login', async () => {
     await login.login(USERS.standard, PASSWORD)
-    await login.expectLoggedIn()
+    await inventory.expectLoaded()
     await inventory.sideMenu.logout()
-    await expect(login.loginButton).toBeVisible()
+    await login.expectLoaded()
   })
 })

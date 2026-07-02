@@ -9,3 +9,6 @@ export const USERS = {
 } as const
 
 export const PASSWORD = 'secret_sauce'
+export const INVALID_PASSWORD = 'wrong_password'
+export const UNKNOWN_USER = 'no_such_user'
+export const EMPTY_CREDENTIAL = ''

@@ -1,4 +1,4 @@
-import { type Page, type Locator, expect } from '@playwright/test'
+import { expect, type Page, type Locator } from '@playwright/test'
 
 export class CartPage {
   readonly page: Page
@@ -27,6 +27,11 @@ export class CartPage {
     await this.page.goto('/cart.html')
   }
 
+  async expectLoaded() {
+    await expect(this.page).toHaveURL(/cart\.html/)
+    await expect(this.checkoutButton).toBeVisible()
+  }
+
   async itemNames(): Promise<string[]> {
     return this.itemNameLabels.allInnerTexts()
   }
@@ -41,45 +46,13 @@ export class CartPage {
     return Number(text.replace(/^\$/, ''))
   }
 
-  async expectItemNames(names: string[]) {
-    await expect(this.itemNameLabels).toHaveText(names)
-  }
-
-  async expectItemName(name: string) {
-    await expect(this.itemNameLabels).toHaveText(name)
-  }
-
-  async expectItemPrice(name: string, price: number) {
-    expect(await this.itemPriceByName(name)).toBeCloseTo(price, 2)
-  }
-
-  async expectItemPriceVisible() {
-    await expect(this.itemPriceLabels).toBeVisible()
-  }
-
-  async expectItemPriceFormat() {
-    await expect(this.itemPriceLabels).toHaveText(/\$\d+\.\d{2}/)
-  }
-
-  async expectItemQuantity(quantity: string) {
-    await expect(this.itemQuantityLabels).toHaveText(quantity)
-  }
-
-  async expectItemQuantities(quantities: string[]) {
-    await expect(this.itemQuantityLabels).toHaveText(quantities)
-  }
-
-  async expectNoRemoveButtons() {
-    await expect(this.removeButtons).toHaveCount(0)
+  itemByName(name: string) {
+    return this.items.filter({ hasText: name })
   }
 
   async removeByName(name: string) {
-    const item = this.items.filter({ hasText: name })
+    const item = this.itemByName(name)
     await item.getByRole('button', { name: /remove/i }).click()
-  }
-
-  async expectItemCount(n: number) {
-    await expect(this.items).toHaveCount(n)
   }
 
   async checkout() {
