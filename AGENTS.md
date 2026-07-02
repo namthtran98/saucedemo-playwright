@@ -4,11 +4,11 @@
 
 This repository is a TypeScript Playwright framework. UI tests target `https://www.saucedemo.com`; API tests target the bundled mock server.
 
-- `tests/ui/`: UI specs for login, products, cart, and checkout.
+- `tests/ui/`: UI specs for login, products, cart, and checkout. Specs own business assertions.
 - `tests/api/`: API specs against the local mock API.
-- `page-objects/`: Page Object Model classes such as `LoginPage.ts`.
-- `fixtures/`: custom Playwright fixtures.
-- `data/`: shared test data, users, and products.
+- `page-objects/`: Page Object Model classes and components such as `LoginPage.ts` and `components/SideMenu.ts`.
+- `fixtures/`: custom Playwright fixtures, including `loggedInPage` for authenticated UI tests.
+- `data/`: shared UI/API test data, users, products, checkout values, and expected messages.
 - `mock-api/server.mjs`: zero-dependency REST mock started by Playwright.
 - `playwright.config.ts`: project definitions, reporters, retries, screenshots, traces, and mock server setup.
 
@@ -26,13 +26,21 @@ This repository is a TypeScript Playwright framework. UI tests target `https://w
 
 ## Coding Style & Naming Conventions
 
-Use TypeScript with `strict` enabled. Follow the existing style: 2-space indentation, single quotes, no semicolons, and concise async helper methods. Keep Page Object classes in PascalCase filenames under `page-objects/`; keep test specs as lowercase domain files like `login.spec.ts`. Prefer Playwright locators such as `getByTestId` and `getByRole`; `data-test` is the configured test id attribute.
+Use TypeScript with `strict` enabled. Follow the existing style: 2-space indentation, single quotes, no semicolons, and concise async helper methods. Keep Page Object classes in PascalCase filenames under `page-objects/`; keep reusable page components under `page-objects/components/`; keep test specs as lowercase domain files like `login.spec.ts`. Prefer Playwright locators such as `getByTestId` and `getByRole`; `data-test` is the configured test id attribute.
+
+## Page Object Model Rules
+
+Keep raw UI locators out of `tests/ui/*.spec.ts`. Define locator properties in page objects first, then expose concise interaction methods such as `login`, `addToCartByName`, `checkout`, and `finish`. Page objects may include readiness assertions such as `expectLoaded`, `expectStepOneLoaded`, or `expectCompleteLoaded` to verify the browser is on the expected page/state.
+
+Do not move business assertions into POM. Assertions for product names, prices, counts, badge values, validation copy, totals, and API response data belong in spec files. Repeated business assertion helpers can live as local helpers inside the relevant spec.
+
+Keep test literals in `data/` modules instead of hardcoding them in specs. Use the current shared modules for users, products, checkout data, checkout/login error messages, and API endpoints/payloads/status values.
 
 There is no lint or format script in `package.json`; match nearby code when editing.
 
 ## Testing Guidelines
 
-Playwright is the test framework. Add UI coverage under `tests/ui/*.spec.ts` and API coverage under `tests/api/*.spec.ts`. Name tests by observable behavior, for example `locked_out_user is rejected`. Before pushing, run `npm test`; for focused work, run `npm run test:ui` or `npm run test:api`.
+Playwright is the test framework. Add UI coverage under `tests/ui/*.spec.ts` and API coverage under `tests/api/*.spec.ts`. Name tests by observable behavior, for example `locked_out_user is rejected`. Use `fixtures/test-fixtures.ts` for logged-in UI setup when a test starts from inventory. Before pushing, run `npm test`; for focused work, run `npm run test:ui` or `npm run test:api`.
 
 ## Commit & Pull Request Guidelines
 

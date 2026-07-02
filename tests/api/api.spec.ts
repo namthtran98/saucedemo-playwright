@@ -1,87 +1,94 @@
 import { test, expect } from '@playwright/test'
+import { API_ENDPOINTS, API_EXPECTED, API_PAYLOADS, HTTP_STATUS } from '../../data/api-test-data'
 
 test.describe('API', () => {
-  test('GET /products returns 200 and an array', async ({ request }) => {
-    const res = await request.get('/products')
-    expect(res.status()).toBe(200)
+  test('products list returns ok and an array', async ({ request }) => {
+    const res = await request.get(API_ENDPOINTS.products)
+    expect(res.status()).toBe(HTTP_STATUS.ok)
     expect(Array.isArray(await res.json())).toBe(true)
   })
 
-  test('GET /products returns 20 products', async ({ request }) => {
-    const products = await (await request.get('/products')).json()
-    expect(products).toHaveLength(20)
+  test('products list returns the expected count', async ({ request }) => {
+    const products = await (await request.get(API_ENDPOINTS.products)).json()
+    expect(products).toHaveLength(API_EXPECTED.productCount)
   })
 
-  test('GET /products/1 returns product with id 1', async ({ request }) => {
-    const product = await (await request.get('/products/1')).json()
-    expect(product.id).toBe(1)
+  test('known product returns its expected id', async ({ request }) => {
+    const product = await (
+      await request.get(API_ENDPOINTS.productById(API_EXPECTED.existingProductId))
+    ).json()
+    expect(product.id).toBe(API_EXPECTED.existingProductId)
   })
 
-  test('GET /products/1 has title and price', async ({ request }) => {
-    const product = await (await request.get('/products/1')).json()
+  test('known product has title and price', async ({ request }) => {
+    const product = await (
+      await request.get(API_ENDPOINTS.productById(API_EXPECTED.existingProductId))
+    ).json()
     expect(product).toHaveProperty('title')
     expect(typeof product.price).toBe('number')
   })
 
-  test('GET /products/9999 returns 404', async ({ request }) => {
-    const res = await request.get('/products/9999')
-    expect(res.status()).toBe(404)
+  test('missing product returns not found', async ({ request }) => {
+    const res = await request.get(API_ENDPOINTS.productById(API_EXPECTED.missingProductId))
+    expect(res.status()).toBe(HTTP_STATUS.notFound)
   })
 
-  test('GET /products/categories returns categories', async ({ request }) => {
-    const res = await request.get('/products/categories')
-    expect(res.status()).toBe(200)
-    expect(await res.json()).toContain('electronics')
+  test('product categories include the expected category', async ({ request }) => {
+    const res = await request.get(API_ENDPOINTS.productCategories)
+    expect(res.status()).toBe(HTTP_STATUS.ok)
+    expect(await res.json()).toContain(API_EXPECTED.category)
   })
 
-  test('POST /products creates a product and returns 201', async ({ request }) => {
-    const res = await request.post('/products', { data: { title: 'New', price: 9.99 } })
-    expect(res.status()).toBe(201)
+  test('creating a product returns created product data', async ({ request }) => {
+    const res = await request.post(API_ENDPOINTS.products, { data: API_PAYLOADS.newProduct })
+    expect(res.status()).toBe(HTTP_STATUS.created)
     const body = await res.json()
-    expect(body.id).toBe(21)
-    expect(body.title).toBe('New')
+    expect(body.id).toBe(API_EXPECTED.createdProductId)
+    expect(body.title).toBe(API_PAYLOADS.newProduct.title)
   })
 
-  test('GET /users returns 200 and an array', async ({ request }) => {
-    const res = await request.get('/users')
-    expect(res.status()).toBe(200)
+  test('users list returns ok and an array', async ({ request }) => {
+    const res = await request.get(API_ENDPOINTS.users)
+    expect(res.status()).toBe(HTTP_STATUS.ok)
     expect(Array.isArray(await res.json())).toBe(true)
   })
 
-  test('GET /users/2 returns Bob', async ({ request }) => {
-    const user = await (await request.get('/users/2')).json()
-    expect(user.name).toBe('Bob')
+  test('known user returns expected name', async ({ request }) => {
+    const user = await (await request.get(API_ENDPOINTS.userById(API_EXPECTED.existingUserId))).json()
+    expect(user.name).toBe(API_EXPECTED.userName)
   })
 
-  test('GET /users/999 returns 404', async ({ request }) => {
-    const res = await request.get('/users/999')
-    expect(res.status()).toBe(404)
+  test('missing user returns not found', async ({ request }) => {
+    const res = await request.get(API_ENDPOINTS.userById(API_EXPECTED.missingUserId))
+    expect(res.status()).toBe(HTTP_STATUS.notFound)
   })
 
-  test('POST /login with valid credentials returns a token', async ({ request }) => {
-    const res = await request.post('/login', { data: { email: 'a@b.com', password: 'pw' } })
-    expect(res.status()).toBe(200)
+  test('valid login returns a token', async ({ request }) => {
+    const res = await request.post(API_ENDPOINTS.login, { data: API_PAYLOADS.validLogin })
+    expect(res.status()).toBe(HTTP_STATUS.ok)
     expect((await res.json()).token).toBeTruthy()
   })
 
-  test('POST /login missing password returns 400', async ({ request }) => {
-    const res = await request.post('/login', { data: { email: 'a@b.com' } })
-    expect(res.status()).toBe(400)
+  test('login missing password returns bad request', async ({ request }) => {
+    const res = await request.post(API_ENDPOINTS.login, { data: API_PAYLOADS.missingPasswordLogin })
+    expect(res.status()).toBe(HTTP_STATUS.badRequest)
   })
 
-  test('GET /posts returns 100 posts', async ({ request }) => {
-    const posts = await (await request.get('/posts')).json()
-    expect(posts).toHaveLength(100)
+  test('posts list returns the expected count', async ({ request }) => {
+    const posts = await (await request.get(API_ENDPOINTS.posts)).json()
+    expect(posts).toHaveLength(API_EXPECTED.postCount)
   })
 
-  test('PUT /posts/1 updates the post', async ({ request }) => {
-    const res = await request.put('/posts/1', { data: { title: 'Updated' } })
-    expect(res.status()).toBe(200)
-    expect((await res.json()).title).toBe('Updated')
+  test('updating a known post returns updated data', async ({ request }) => {
+    const res = await request.put(API_ENDPOINTS.postById(API_EXPECTED.existingPostId), {
+      data: API_PAYLOADS.updatedPost,
+    })
+    expect(res.status()).toBe(HTTP_STATUS.ok)
+    expect((await res.json()).title).toBe(API_PAYLOADS.updatedPost.title)
   })
 
-  test('DELETE /posts/1 returns 200', async ({ request }) => {
-    const res = await request.delete('/posts/1')
-    expect(res.status()).toBe(200)
+  test('deleting a known post returns ok', async ({ request }) => {
+    const res = await request.delete(API_ENDPOINTS.postById(API_EXPECTED.existingPostId))
+    expect(res.status()).toBe(HTTP_STATUS.ok)
   })
 })

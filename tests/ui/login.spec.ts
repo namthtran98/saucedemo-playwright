@@ -1,88 +1,89 @@
 import { test, expect } from '@playwright/test'
 import { LoginPage } from '../../page-objects/LoginPage'
-import { USERS, PASSWORD } from '../../data/users'
+import { InventoryPage } from '../../page-objects/InventoryPage'
+import { EMPTY_CREDENTIAL, INVALID_PASSWORD, PASSWORD, UNKNOWN_USER, USERS } from '../../data/users'
+import { LOGIN_ERROR_MESSAGES } from '../../data/checkout-error-messages'
 
 test.describe('Login', () => {
   let login: LoginPage
+  let inventory: InventoryPage
 
   test.beforeEach(async ({ page }) => {
     login = new LoginPage(page)
+    inventory = new InventoryPage(page)
     await login.goto()
   })
 
   test('login form is visible', async () => {
-    await expect(login.username).toBeVisible()
-    await expect(login.password).toBeVisible()
-    await expect(login.loginButton).toBeVisible()
+    await login.expectLoaded()
   })
 
   test('standard_user logs in successfully', async () => {
     await login.login(USERS.standard, PASSWORD)
-    await login.expectLoggedIn()
+    await inventory.expectLoaded()
   })
 
   test('problem_user logs in successfully', async () => {
     await login.login(USERS.problem, PASSWORD)
-    await login.expectLoggedIn()
+    await inventory.expectLoaded()
   })
 
   test('performance_glitch_user logs in successfully', async () => {
     await login.login(USERS.glitch, PASSWORD)
-    await login.expectLoggedIn()
+    await inventory.expectLoaded()
   })
 
   test('error_user logs in successfully', async () => {
     await login.login(USERS.error, PASSWORD)
-    await login.expectLoggedIn()
+    await inventory.expectLoaded()
   })
 
   test('visual_user logs in successfully', async () => {
     await login.login(USERS.visual, PASSWORD)
-    await login.expectLoggedIn()
+    await inventory.expectLoaded()
   })
 
   test('locked_out_user is rejected', async () => {
     await login.login(USERS.lockedOut, PASSWORD)
-    await login.expectError(/locked out/i)
+    await expect(login.error).toContainText(LOGIN_ERROR_MESSAGES.lockedOut)
   })
 
   test('wrong password is rejected', async () => {
-    await login.login(USERS.standard, 'wrong_password')
-    await login.expectError(/do not match/i)
+    await login.login(USERS.standard, INVALID_PASSWORD)
+    await expect(login.error).toContainText(LOGIN_ERROR_MESSAGES.invalidCredentials)
   })
 
   test('unknown user is rejected', async () => {
-    await login.login('no_such_user', PASSWORD)
-    await login.expectError(/do not match/i)
+    await login.login(UNKNOWN_USER, PASSWORD)
+    await expect(login.error).toContainText(LOGIN_ERROR_MESSAGES.invalidCredentials)
   })
 
   test('empty username shows required error', async () => {
-    await login.login('', PASSWORD)
-    await login.expectError(/Username is required/i)
+    await login.login(EMPTY_CREDENTIAL, PASSWORD)
+    await expect(login.error).toContainText(LOGIN_ERROR_MESSAGES.usernameRequired)
   })
 
   test('empty password shows required error', async () => {
-    await login.login(USERS.standard, '')
-    await login.expectError(/Password is required/i)
+    await login.login(USERS.standard, EMPTY_CREDENTIAL)
+    await expect(login.error).toContainText(LOGIN_ERROR_MESSAGES.passwordRequired)
   })
 
   test('empty form shows username required error', async () => {
     await login.loginButton.click()
-    await login.expectError(/Username is required/i)
+    await expect(login.error).toContainText(LOGIN_ERROR_MESSAGES.usernameRequired)
   })
 
-  test('error message can be dismissed', async ({ page }) => {
+  test('error message can be dismissed', async () => {
     await login.login(USERS.lockedOut, PASSWORD)
-    await login.expectError(/locked out/i)
-    await page.getByTestId('error-button').click()
+    await expect(login.error).toContainText(LOGIN_ERROR_MESSAGES.lockedOut)
+    await login.dismissError()
     await expect(login.error).toHaveCount(0)
   })
 
-  test('successful login then logout returns to login', async ({ page }) => {
+  test('successful login then logout returns to login', async () => {
     await login.login(USERS.standard, PASSWORD)
-    await login.expectLoggedIn()
-    await page.getByRole('button', { name: 'Open Menu' }).click()
-    await page.getByTestId('logout-sidebar-link').click()
-    await expect(login.loginButton).toBeVisible()
+    await inventory.expectLoaded()
+    await inventory.sideMenu.logout()
+    await login.expectLoaded()
   })
 })

@@ -1,4 +1,4 @@
-import { type Page, type Locator, expect } from '@playwright/test'
+import { expect, type Page, type Locator } from '@playwright/test'
 
 export class CheckoutPage {
   readonly page: Page
@@ -9,6 +9,7 @@ export class CheckoutPage {
   readonly cancelButton: Locator
   readonly finishButton: Locator
   readonly errorMessage: Locator
+  readonly errorButton: Locator
   readonly itemTotalLabel: Locator
   readonly taxLabel: Locator
   readonly totalLabel: Locator
@@ -24,6 +25,7 @@ export class CheckoutPage {
     this.cancelButton = page.getByTestId('cancel')
     this.finishButton = page.getByTestId('finish')
     this.errorMessage = page.getByTestId('error')
+    this.errorButton = page.getByTestId('error-button')
     this.itemTotalLabel = page.getByTestId('subtotal-label')
     this.taxLabel = page.getByTestId('tax-label')
     this.totalLabel = page.getByTestId('total-label')
@@ -37,6 +39,34 @@ export class CheckoutPage {
     await this.postalCode.fill(zip)
   }
 
+  async fillFirstName(first: string) {
+    await this.firstName.fill(first)
+  }
+
+  async fillFirstAndLast(first: string, last: string) {
+    await this.firstName.fill(first)
+    await this.lastName.fill(last)
+  }
+
+  async expectStepOneLoaded() {
+    await expect(this.page).toHaveURL(/checkout-step-one\.html/)
+    await expect(this.firstName).toBeVisible()
+    await expect(this.lastName).toBeVisible()
+    await expect(this.postalCode).toBeVisible()
+  }
+
+  async expectOverviewLoaded() {
+    await expect(this.page).toHaveURL(/checkout-step-two\.html/)
+    await expect(this.itemTotalLabel).toBeVisible()
+    await expect(this.finishButton).toBeVisible()
+  }
+
+  async expectCompleteLoaded() {
+    await expect(this.page).toHaveURL(/checkout-complete\.html/)
+    await expect(this.completeHeader).toBeVisible()
+    await expect(this.backHomeButton).toBeVisible()
+  }
+
   async continue() {
     await this.continueButton.click()
   }
@@ -47,6 +77,14 @@ export class CheckoutPage {
 
   async cancel() {
     await this.cancelButton.click()
+  }
+
+  async dismissError() {
+    await this.errorButton.click()
+  }
+
+  async backHome() {
+    await this.backHomeButton.click()
   }
 
   async itemTotalValue(): Promise<number> {
@@ -62,17 +100,5 @@ export class CheckoutPage {
   async totalValue(): Promise<number> {
     const text = await this.totalLabel.innerText()
     return Number(text.replace('Total: $', '').trim())
-  }
-
-  async expectOnStepOne() {
-    await expect(this.page).toHaveURL(/checkout-step-one\.html/)
-  }
-
-  async expectOnStepTwo() {
-    await expect(this.page).toHaveURL(/checkout-step-two\.html/)
-  }
-
-  async expectOnComplete() {
-    await expect(this.page).toHaveURL(/checkout-complete\.html/)
   }
 }

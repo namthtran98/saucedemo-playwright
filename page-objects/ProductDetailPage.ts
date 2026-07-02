@@ -1,4 +1,4 @@
-import { type Page, type Locator, expect } from '@playwright/test'
+import { expect, type Page, type Locator } from '@playwright/test'
 
 export class ProductDetailPage {
   readonly page: Page
@@ -17,8 +17,10 @@ export class ProductDetailPage {
     this.backButton = page.getByTestId('back-to-products')
   }
 
-  async expectName(text: string) {
-    await expect(this.name).toHaveText(text)
+  async expectLoaded() {
+    await expect(this.page).toHaveURL(/inventory-item\.html/)
+    await expect(this.name).toBeVisible()
+    await expect(this.backButton).toBeVisible()
   }
 
   async addToCart() {

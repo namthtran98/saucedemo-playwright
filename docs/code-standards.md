@@ -1,0 +1,60 @@
+# Code Standards
+
+## TypeScript Style
+
+- Use TypeScript with `strict` enabled.
+- Use 2-space indentation.
+- Use single quotes.
+- Do not use semicolons.
+- Keep helper methods concise and async when they interact with Playwright.
+- Match nearby style because there is no lint or format script.
+
+## File Naming
+
+- Page object files use PascalCase, for example `LoginPage.ts`.
+- Reusable page components live in `page-objects/components/`.
+- Spec files use lowercase domain names, for example `checkout.spec.ts`.
+- Shared data modules use descriptive kebab-case or existing repo naming.
+
+## Page Object Model Rules
+
+- Do not construct raw locators inside `tests/ui/*.spec.ts`.
+- Define reusable locator properties in page object constructors.
+- Page objects may expose actions such as `login`, `addToCartByName`, `checkout`, and `finish`.
+- Page objects may expose readiness assertions such as `expectLoaded`, `expectStepOneLoaded`, and `expectCompleteLoaded`.
+- Page objects should not assert business outcomes.
+
+## Assertion Boundary
+
+Keep business assertions in specs:
+
+- Product names, prices, counts, and sort order.
+- Cart badge values and line-item quantities.
+- Login and checkout validation messages.
+- Checkout labels, totals, tax, and order completion text.
+- API status codes, response payloads, and expected records.
+
+Repeated business assertions can be local helper functions inside the relevant spec.
+
+## Test Data Rules
+
+- Put shared literals in `data/`.
+- Use `data/users.ts` for SauceDemo users and credentials.
+- Use `data/products.ts` for product names, prices, and inventory constants.
+- Use `data/checkout-test-data.ts` for checkout form data and labels.
+- Use `data/checkout-error-messages.ts` for validation copy.
+- Use `data/api-test-data.ts` for API endpoints, payloads, status codes, and expected values.
+
+## Playwright Locator Rules
+
+- Prefer `getByTestId` and `getByRole`.
+- `data-test` is configured as the test id attribute.
+- If a selector is used more than once, make it a locator property.
+- Avoid hiding selector strings inside methods when a property can represent the element.
+
+## Validation
+
+- Run `npx tsc --noEmit` after TypeScript structure changes.
+- Run `npm run test:ui` for UI-only changes.
+- Run `npm run test:api` for API-only changes.
+- Run `npm test` before pushing or after cross-cutting changes.
