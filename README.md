@@ -27,3 +27,13 @@ they pass deterministically offline.
 - `mock-api/server.mjs` the bundled mock REST API.
 - `data/` external test data.
 - `fixtures/` custom Playwright fixtures.
+
+## Documentation
+
+- `docs/project-overview-pdr.md` explains the project purpose and requirements.
+- `docs/codebase-summary.md` maps the current modules and test coverage.
+- `docs/code-standards.md` records POM, data, and assertion conventions.
+- `docs/system-architecture.md` describes the UI/API test architecture.
+- `docs/project-roadmap.md` tracks practical next steps.
+- `docs/deployment-guide.md` covers local setup and CI usage.
+- `docs/design-guidelines.md` documents test design principles.
