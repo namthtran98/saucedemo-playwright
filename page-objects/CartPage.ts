@@ -5,6 +5,8 @@ export class CartPage {
   readonly items: Locator
   readonly itemNameLabels: Locator
   readonly itemPriceLabels: Locator
+  readonly itemQuantityLabels: Locator
+  readonly removeButtons: Locator
   readonly checkoutButton: Locator
   readonly continueShoppingButton: Locator
   readonly badge: Locator
@@ -14,6 +16,8 @@ export class CartPage {
     this.items = page.getByTestId('inventory-item')
     this.itemNameLabels = page.getByTestId('inventory-item-name')
     this.itemPriceLabels = page.getByTestId('inventory-item-price')
+    this.itemQuantityLabels = page.getByTestId('item-quantity')
+    this.removeButtons = page.getByRole('button', { name: /remove/i })
     this.checkoutButton = page.getByTestId('checkout')
     this.continueShoppingButton = page.getByTestId('continue-shopping')
     this.badge = page.getByTestId('shopping-cart-badge')
@@ -39,6 +43,34 @@ export class CartPage {
 
   async expectItemNames(names: string[]) {
     await expect(this.itemNameLabels).toHaveText(names)
+  }
+
+  async expectItemName(name: string) {
+    await expect(this.itemNameLabels).toHaveText(name)
+  }
+
+  async expectItemPrice(name: string, price: number) {
+    expect(await this.itemPriceByName(name)).toBeCloseTo(price, 2)
+  }
+
+  async expectItemPriceVisible() {
+    await expect(this.itemPriceLabels).toBeVisible()
+  }
+
+  async expectItemPriceFormat() {
+    await expect(this.itemPriceLabels).toHaveText(/\$\d+\.\d{2}/)
+  }
+
+  async expectItemQuantity(quantity: string) {
+    await expect(this.itemQuantityLabels).toHaveText(quantity)
+  }
+
+  async expectItemQuantities(quantities: string[]) {
+    await expect(this.itemQuantityLabels).toHaveText(quantities)
+  }
+
+  async expectNoRemoveButtons() {
+    await expect(this.removeButtons).toHaveCount(0)
   }
 
   async removeByName(name: string) {
