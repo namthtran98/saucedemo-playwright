@@ -28,9 +28,11 @@ This project does not deploy an application. The deployable artifact is the test
 
 | Command | Purpose |
 | --- | --- |
-| `npm test` | Run UI and API projects |
+| `npm test` | Run all configured Playwright projects |
 | `npm run test:ui` | Run only UI tests |
 | `npm run test:api` | Run only API tests |
+| `npx playwright test --project=visual` | Run only visual regression tests |
+| `npx playwright test --project=visual --update-snapshots` | Update approved visual baselines |
 | `npm run test:headed` | Run headed browser tests with one worker |
 | `npm run test:debug` | Run tests with `PWDEBUG=1` and one worker |
 | `npm run mock-api` | Start the mock API manually |
@@ -65,6 +67,8 @@ Do not commit:
 
 These paths are ignored by `.gitignore`.
 
+Do commit approved visual baseline PNGs under `data/visual-baselines/`.
+
 ## Troubleshooting
 
 | Symptom | Likely Cause | Action |
@@ -73,3 +77,4 @@ These paths are ignored by `.gitignore`.
 | Port conflict on `3100` | Another process uses the mock API port | Set `MOCK_API_PORT` to another port |
 | Browser executable missing | Playwright browsers not installed | Run `npx playwright install --with-deps` |
 | UI tests fail but API tests pass | SauceDemo changed or unavailable | Re-run, inspect HTML report, update POM if markup changed |
+| Visual tests fail with screenshot diffs | UI changed or baseline is stale | Review `test-results/`; update snapshots only for intentional changes |

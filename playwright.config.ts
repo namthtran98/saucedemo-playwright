@@ -8,6 +8,11 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : [['html', { open: 'never' }]],
+  expect: {
+    toHaveScreenshot: {
+      pathTemplate: 'data/visual-baselines{/projectName}/{testFilePath}/{arg}{ext}',
+    },
+  },
   use: {
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
@@ -29,6 +34,11 @@ export default defineConfig({
       name: 'api',
       testMatch: /tests\/api\/.*\.spec\.ts/,
       use: { baseURL: `http://localhost:${MOCK_API_PORT}` },
+    },
+    {
+      name: 'visual',
+      testMatch: /tests\/visual\/.*\.spec\.ts/,
+      use: { ...devices['Desktop Chrome'], baseURL: 'https://www.saucedemo.com' },
     },
   ],
 })

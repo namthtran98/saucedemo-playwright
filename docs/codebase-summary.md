@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository is a compact Playwright test framework. It combines UI automation against SauceDemo with API tests against a deterministic local mock API.
+This repository is a compact Playwright test framework. It combines UI automation and visual regression coverage against SauceDemo with API tests against a deterministic local mock API.
 
 ## Top-Level Structure
 
@@ -10,12 +10,14 @@ This repository is a compact Playwright test framework. It combines UI automatio
 | --- | --- |
 | `tests/ui/` | UI specs for login, products, cart, and checkout |
 | `tests/api/` | API specs for products, users, login, and posts |
+| `tests/visual/` | Visual regression specs for stable SauceDemo UI snapshots |
 | `page-objects/` | Page Object Model classes for SauceDemo pages |
 | `page-objects/components/` | Reusable page components such as `SideMenu` |
 | `fixtures/` | Custom Playwright fixtures |
-| `data/` | Shared test data, API endpoints, payloads, and expected values |
+| `data/` | Shared test data, API endpoints, payloads, expected values, and visual baselines |
+| `data/visual-baselines/` | Approved screenshot baselines for visual tests |
 | `mock-api/` | Zero-dependency local REST API |
-| `playwright.config.ts` | Playwright projects, reporters, retries, web server, and test id config |
+| `playwright.config.ts` | Playwright projects, reporters, retries, web server, screenshot baseline path, and test id config |
 
 ## Test Suites
 
@@ -26,6 +28,7 @@ This repository is a compact Playwright test framework. It combines UI automatio
 | Cart UI | `tests/ui/cart.spec.ts` | Cart persistence, quantities, removal, checkout navigation |
 | Checkout UI | `tests/ui/checkout.spec.ts` | Checkout form validation, overview totals, completion flow |
 | API | `tests/api/api.spec.ts` | Products, categories, users, login, posts CRUD-like behavior |
+| Visual | `tests/visual/visual.spec.ts` | Login button and inventory cart badge visual baselines |
 
 ## Page Objects
 
@@ -50,9 +53,12 @@ This repository is a compact Playwright test framework. It combines UI automatio
 
 ## Runtime Behavior
 
-`playwright.config.ts` defines two projects:
+`playwright.config.ts` defines three projects:
 
 - `ui`: Desktop Chrome, SauceDemo base URL, `tests/ui/*.spec.ts`.
 - `api`: local mock API base URL, `tests/api/*.spec.ts`.
+- `visual`: Desktop Chrome, SauceDemo base URL, `tests/visual/*.spec.ts`.
+
+Visual baselines use `expect.toHaveScreenshot.pathTemplate` and are stored under `data/visual-baselines{/projectName}/{testFilePath}/{arg}{ext}`.
 
 The mock API starts automatically through Playwright `webServer` and exposes `/health` for readiness. The default port is `3100`, overridden by `MOCK_API_PORT`.
