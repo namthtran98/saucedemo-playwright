@@ -6,7 +6,7 @@ The UI tests run against the public practice site saucedemo.com. The 15 API test
 run against a bundled, zero-dependency mock API that Playwright starts for you, so
 they pass deterministically offline.
 Visual tests run against SauceDemo through a dedicated Playwright project and
-compare screenshots against baselines stored under `data/visual-baselines/`.
+compare screenshots against baselines restored into `data/visual-baselines/`.
 
 ## Quick start
 
@@ -26,13 +26,18 @@ compare screenshots against baselines stored under `data/visual-baselines/`.
 
 ## Visual baselines
 
-CI runs on Linux, so approved visual baselines must be generated in the matching
-Playwright Linux container before push:
+CI runs on Linux. The `data/visual-baselines/` directory is ignored by git, so
+baseline PNGs are not committed. CI restores visual baselines from the latest
+successful `main` workflow artifact named `visual-baselines`; if none exists, it
+generates missing baselines for that run and uploads them as an artifact.
+
+For local review, generate Linux-compatible baselines in the matching Playwright
+container:
 
     npm run test:visual:update:linux
 
-Do not update CI baselines from macOS or another local OS. Rendering can differ
-enough to make the GitHub Actions visual project fail.
+Do not commit generated baseline PNGs. Rendering can differ enough between macOS
+and Linux to make the GitHub Actions visual project fail.
 
 ## Layout
 
@@ -40,7 +45,7 @@ enough to make the GitHub Actions visual project fail.
 - `tests/ui/` UI suites: login, products, cart, checkout.
 - `tests/api/` API suite against the bundled mock.
 - `tests/visual/` visual regression specs for stable UI snapshots.
-- `data/visual-baselines/` committed screenshot baselines for visual tests.
+- `data/visual-baselines/` ignored runtime screenshot baselines for visual tests.
 - `mock-api/server.mjs` the bundled mock REST API.
 - `data/` external test data.
 - `fixtures/` custom Playwright fixtures.

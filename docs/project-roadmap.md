@@ -9,7 +9,7 @@ The framework is usable and validated with 105 tests:
 - 2 visual regression tests for login and inventory UI snapshots.
 - POM structure is in place.
 - Shared data modules cover UI and API constants.
-- Visual baselines are configured under `data/visual-baselines/`.
+- Visual baselines are configured under ignored `data/visual-baselines/` and stored through CI artifacts.
 - `AGENTS.md` documents repo conventions.
 
 ## Near-Term Priorities
@@ -31,7 +31,7 @@ The framework is usable and validated with 105 tests:
 - Prefer small, focused specs by domain.
 - Keep POM classes focused on page interaction.
 - Keep new constants in `data/`.
-- Keep approved visual baselines in `data/visual-baselines/`.
+- Keep visual baseline PNGs out of git; use CI artifacts or local ignored files.
 - Run the narrowest relevant suite during iteration, then `npm test` before pushing.
 - Update docs when framework structure, commands, or conventions change.
 
@@ -50,5 +50,5 @@ The framework is usable and validated with 105 tests:
 - Relevant tests pass.
 - TypeScript compiles when code shape changes.
 - No raw UI locator construction is added to UI specs.
-- Visual baseline changes are committed only when intentional.
+- Visual baseline PNGs are not committed.
 - Docs are updated for any new structure, command, or convention.

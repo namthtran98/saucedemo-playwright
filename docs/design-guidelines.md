@@ -45,7 +45,7 @@ These guidelines define how tests should be designed in this Playwright framewor
 
 - Keep visual tests in `tests/visual/*.spec.ts`.
 - Use `toHaveScreenshot` for stable pages, components, or locator targets.
-- Store approved baselines in `data/visual-baselines/` through Playwright config.
+- Restore or generate runtime baselines in ignored `data/visual-baselines/` through Playwright config.
 - Use page object locators and fixtures for setup, same as UI specs.
 - Mask only known unstable regions; avoid broad masks that hide real layout regressions.
 - Use small diff thresholds only when the target has acceptable rendering variance.

@@ -15,7 +15,7 @@ This repository is a compact Playwright test framework. It combines UI automatio
 | `page-objects/components/` | Reusable page components such as `SideMenu` |
 | `fixtures/` | Custom Playwright fixtures |
 | `data/` | Shared test data, API endpoints, payloads, expected values, and visual baselines |
-| `data/visual-baselines/` | Approved screenshot baselines for visual tests |
+| `data/visual-baselines/` | Ignored runtime screenshot baselines restored from CI artifacts or generated locally |
 | `mock-api/` | Zero-dependency local REST API |
 | `playwright.config.ts` | Playwright projects, reporters, retries, web server, screenshot baseline path, and test id config |
 
@@ -59,6 +59,6 @@ This repository is a compact Playwright test framework. It combines UI automatio
 - `api`: local mock API base URL, `tests/api/*.spec.ts`.
 - `visual`: Desktop Chrome, SauceDemo base URL, `tests/visual/*.spec.ts`.
 
-Visual baselines use `expect.toHaveScreenshot.pathTemplate` and are stored under `data/visual-baselines{/projectName}/{testFilePath}/{arg}{ext}`.
+Visual baselines use `expect.toHaveScreenshot.pathTemplate` and are restored or generated under ignored `data/visual-baselines{/projectName}/{testFilePath}/{arg}{ext}`.
 
 The mock API starts automatically through Playwright `webServer` and exposes `/health` for readiness. The default port is `3100`, overridden by `MOCK_API_PORT`.

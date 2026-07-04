@@ -68,8 +68,12 @@ Do not commit:
 
 These paths are ignored by `.gitignore`.
 
-Do commit approved visual baseline PNGs under `data/visual-baselines/`. Because CI
-runs on Linux, approved CI baselines should be generated with:
+Do not commit visual baseline PNGs under `data/visual-baselines/`; that path is
+ignored by git. CI restores baselines from the latest successful `main` workflow
+artifact named `visual-baselines`. If no artifact exists, CI generates missing
+baselines for that run and uploads them as a new artifact.
+
+Because CI runs on Linux, local baseline review should use:
 
 ```bash
 npm run test:visual:update:linux

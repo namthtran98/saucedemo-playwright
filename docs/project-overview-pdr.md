@@ -32,7 +32,7 @@ The project currently has 105 tests: 88 UI tests, 15 API tests, and 2 visual tes
 - Keep UI locators and interactions in page objects.
 - Keep business assertions in spec files.
 - Store shared test data in `data/`.
-- Store approved visual baselines in `data/visual-baselines/`.
+- Restore or generate visual baselines under ignored `data/visual-baselines/`.
 
 ## Non-Functional Requirements
 
@@ -41,7 +41,7 @@ The project currently has 105 tests: 88 UI tests, 15 API tests, and 2 visual tes
 - API tests must pass offline against the local mock API.
 - Page objects should stay small and focused.
 - Test reports, traces, screenshots, and generated artifacts should not be committed.
-- Visual baseline PNGs are committed only after intentional review.
+- Visual baseline PNGs are not committed; CI stores them as workflow artifacts.
 
 ## Out Of Scope
 

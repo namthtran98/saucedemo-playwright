@@ -18,7 +18,8 @@ flowchart LR
   Fixtures[fixtures/test-fixtures.ts]
   POM[page-objects/*]
   Data[data/*]
-  Baselines[data/visual-baselines/*]
+  Baselines[data/visual-baselines/* ignored]
+  Artifacts[GitHub Actions visual-baselines artifact]
   SauceDemo[SauceDemo]
   MockAPI[mock-api/server.mjs]
 
@@ -26,6 +27,7 @@ flowchart LR
   Config --> APIProject
   Config --> VisualProject
   Config --> MockAPI
+  Artifacts --> Baselines
   UIProject --> SpecsUI
   APIProject --> SpecsAPI
   VisualProject --> SpecsVisual
@@ -54,7 +56,7 @@ flowchart LR
 - Traces are collected on first retry.
 - Screenshots are collected only on failure.
 - `data-test` is the configured test id attribute.
-- `expect.toHaveScreenshot.pathTemplate` stores visual baselines under `data/visual-baselines/`.
+- `expect.toHaveScreenshot.pathTemplate` stores runtime visual baselines under ignored `data/visual-baselines/`.
 
 ## UI Test Flow
 
@@ -76,8 +78,9 @@ flowchart LR
 1. The `visual` project runs `tests/visual/*.spec.ts` against SauceDemo.
 2. Visual specs reuse fixtures and page object locators for setup and stable targets.
 3. Assertions call `toHaveScreenshot` on pages or locators.
-4. Playwright compares screenshots with baselines in `data/visual-baselines/`.
-5. Intentional CI visual changes are approved with `npm run test:visual:update:linux`.
+4. CI restores baselines from the latest successful `main` workflow artifact, or generates missing baselines when no artifact exists.
+5. Playwright compares screenshots with baselines in ignored `data/visual-baselines/`.
+6. Intentional CI visual changes are reviewed with `npm run test:visual:update:linux`.
 
 ## Mock API
 
@@ -100,6 +103,6 @@ The mock API uses Node `http` only. It keeps products, categories, users, and po
 - Page objects own UI locators, interactions, and readiness checks.
 - Specs own scenario setup and business assertions.
 - `data/` owns shared literals and expected values.
-- `data/visual-baselines/` owns approved screenshot baselines.
+- `data/visual-baselines/` holds ignored runtime screenshot baselines.
 - `mock-api/` owns deterministic API behavior.
 - `playwright.config.ts` owns execution projects and server startup.
