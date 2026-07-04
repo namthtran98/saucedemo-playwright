@@ -1,6 +1,6 @@
 {
   "name": "playwright-project-pack",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Production-ready Playwright framework with 125 tests (88 UI + 32 API + 2 visual + 3 accessibility).",
   "scripts": {
