@@ -18,7 +18,7 @@ This project does not deploy an application. The deployable artifact is the test
    npx playwright install --with-deps
    ```
 
-3. Run the full suite:
+3. Run UI and API tests:
 
    ```bash
    npm test
@@ -28,9 +28,13 @@ This project does not deploy an application. The deployable artifact is the test
 
 | Command | Purpose |
 | --- | --- |
-| `npm test` | Run UI and API projects |
+| `npm test` | Run UI and API tests without requiring visual baselines |
+| `npm run test:all` | Run UI, API, and visual tests after visual baselines exist |
 | `npm run test:ui` | Run only UI tests |
 | `npm run test:api` | Run only API tests |
+| `npm run test:visual` | Run only visual regression tests |
+| `npm run test:visual:update` | Update visual baselines on the current OS |
+| `npm run test:visual:update:linux` | Update CI-compatible Linux visual baselines in Docker |
 | `npm run test:headed` | Run headed browser tests with one worker |
 | `npm run test:debug` | Run tests with `PWDEBUG=1` and one worker |
 | `npm run mock-api` | Start the mock API manually |
@@ -51,8 +55,10 @@ A minimal CI job should:
 2. Set up Node.js.
 3. Run `npm ci`.
 4. Run `npx playwright install --with-deps`.
-5. Run `npm test`.
-6. Upload `playwright-report/` and `test-results/` only as artifacts, not committed files.
+5. Restore or generate visual baselines.
+6. Run `npm test`.
+7. Run `npm run test:visual`.
+8. Upload `playwright-report/`, `test-results/`, and baseline artifacts, not committed files.
 
 ## Generated Artifacts
 
@@ -65,6 +71,23 @@ Do not commit:
 
 These paths are ignored by `.gitignore`.
 
+Do not commit visual baseline PNGs under `data/visual-baselines/`; that path is
+ignored by git. CI restores baselines from the latest successful `main` workflow
+artifact named `visual-baselines`. If no artifact exists, CI generates missing
+baselines for that run and uploads them as a new artifact.
+
+For intentional visual changes, manually run the `Playwright Tests` workflow and
+set `visual_baseline_update` to `changed` or `all`. That controlled path updates
+the artifact without committing PNGs to the repository.
+
+Because CI runs on Linux, local baseline review should use:
+
+```bash
+npm run test:visual:update:linux
+```
+
+Do not use macOS-generated baseline updates for CI approval.
+
 ## Troubleshooting
 
 | Symptom | Likely Cause | Action |
@@ -73,3 +96,4 @@ These paths are ignored by `.gitignore`.
 | Port conflict on `3100` | Another process uses the mock API port | Set `MOCK_API_PORT` to another port |
 | Browser executable missing | Playwright browsers not installed | Run `npx playwright install --with-deps` |
 | UI tests fail but API tests pass | SauceDemo changed or unavailable | Re-run, inspect HTML report, update POM if markup changed |
+| Visual tests fail with screenshot diffs | UI changed or baseline is stale | Review `test-results/`; update snapshots only for intentional changes |

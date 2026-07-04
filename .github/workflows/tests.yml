@@ -3,6 +3,20 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+    inputs:
+      visual_baseline_update:
+        description: Update mode for visual baselines
+        type: choice
+        required: true
+        default: missing
+        options:
+          - missing
+          - changed
+          - all
+permissions:
+  contents: read
+  actions: read
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,8 +29,38 @@ jobs:
         run: npm ci
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
+      - name: Restore visual baselines
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p data/visual-baselines
+          run_id="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow tests.yml --branch main --status success --json databaseId --jq '.[0].databaseId // ""')"
+          if [ -n "$run_id" ]; then
+            gh run download "$run_id" --repo "$GITHUB_REPOSITORY" --name visual-baselines --dir data/visual-baselines || \
+              echo "No visual baseline artifact found on latest successful main run; missing baselines will be generated for this run."
+          else
+            echo "No published visual baseline artifact found; missing baselines will be generated for this run."
+          fi
+      - name: Generate or update visual baselines
+        env:
+          VISUAL_BASELINE_UPDATE: ${{ github.event_name == 'workflow_dispatch' && inputs.visual_baseline_update || 'missing' }}
+        run: |
+          npm run test:visual -- --update-snapshots="$VISUAL_BASELINE_UPDATE" || {
+            if [ "$VISUAL_BASELINE_UPDATE" = "missing" ]; then
+              exit 0
+            fi
+            exit 1
+          }
       - name: Run tests
         run: npm test
+      - name: Run visual tests
+        run: npm run test:visual
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: visual-baselines
+          path: data/visual-baselines/
+          retention-days: 30
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
