@@ -22,4 +22,3 @@ Automated source: `tests/ui/login.spec.ts`
 | LGN-011 | Empty password shows required error | Username: `standard_user`<br>Password: empty | 1. Enter username.<br>2. Leave password empty.<br>3. Click Login. | Error message shows: `Epic sadface: Password is required`. |
 | LGN-012 | Empty form shows username required error | Username: empty<br>Password: empty | 1. Leave both fields empty.<br>2. Click Login. | Error message shows: `Epic sadface: Username is required`. |
 | LGN-013 | Error message can be dismissed | Username: `locked_out_user` | 1. Trigger locked-out login error.<br>2. Click the error close button. | Error message disappears. |
-| LGN-014 | Successful login then logout returns to login | Username: `standard_user` | 1. Log in successfully.<br>2. Open side menu.<br>3. Click Logout. | Login page loads and login button is visible. |

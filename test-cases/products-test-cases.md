@@ -30,6 +30,4 @@ Automated source: `tests/ui/products.spec.ts`
 | PRD-019 | Back button returns to the inventory page | Product: Backpack | 1. Open Backpack detail page.<br>2. Click Back to products. | Inventory page loads and Products title is visible. |
 | PRD-020 | Add to cart from the detail page updates the badge | Product: Backpack | 1. Open Backpack detail page.<br>2. Click Add to cart. | Cart badge shows `1`. |
 | PRD-021 | Cart badge persists from inventory to detail page | Product: Backpack | 1. Add Backpack from inventory.<br>2. Open Backpack detail page. | Cart badge still shows `1`. |
-| PRD-022 | Open menu shows All Items, About, Logout, Reset links | None | 1. Open side menu. | All Items, About, Logout, and Reset App State links are visible. |
-| PRD-023 | Reset app state clears the cart badge after adding an item | Product: Backpack | 1. Add Backpack.<br>2. Open side menu.<br>3. Click Reset App State. | Cart badge disappears. |
-| PRD-024 | Footer shows copyright and three social links | Footer text: `Sauce Labs` | 1. Scroll to footer if needed.<br>2. Check footer copy and social links. | Footer contains Sauce Labs copy and Twitter, Facebook, LinkedIn links are visible. |
+| PRD-022 | Footer shows copyright and three social links | Footer text: `Sauce Labs` | 1. Scroll to footer if needed.<br>2. Check footer copy and social links. | Footer contains Sauce Labs copy and Twitter, Facebook, LinkedIn links are visible. |

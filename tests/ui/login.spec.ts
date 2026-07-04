@@ -79,11 +79,4 @@ test.describe('Login', () => {
     await login.dismissError()
     await expect(login.error).toHaveCount(0)
   })
-
-  test('successful login then logout returns to login', async () => {
-    await login.login(USERS.standard, PASSWORD)
-    await inventory.expectLoaded()
-    await inventory.sideMenu.logout()
-    await login.expectLoaded()
-  })
 })

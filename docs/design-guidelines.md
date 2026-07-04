@@ -8,7 +8,7 @@ These guidelines define how tests should be designed in this Playwright framewor
 
 - Name tests by observable behavior.
 - Keep each test focused on one user-visible outcome.
-- Use domain specs: login, products, cart, checkout, API, visual, and accessibility.
+- Use domain specs: login, menu, products, cart, checkout, API, visual, and accessibility.
 - Prefer setup helpers when they describe user intent clearly.
 - Avoid hidden setup that makes the assertion hard to understand.
 
