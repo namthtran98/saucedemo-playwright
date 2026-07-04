@@ -26,7 +26,7 @@ The project currently has 105 tests: 88 UI tests, 15 API tests, and 2 visual tes
 - Run all tests with `npm test`.
 - Run only UI tests with `npm run test:ui`.
 - Run only API tests with `npm run test:api`.
-- Run visual regression tests with `npx playwright test --project=visual`.
+- Run visual regression tests with `npm run test:visual`.
 - Start the mock API automatically through Playwright `webServer`.
 - Use SauceDemo `data-test` attributes for stable UI locators.
 - Keep UI locators and interactions in page objects.
@@ -53,7 +53,7 @@ The project currently has 105 tests: 88 UI tests, 15 API tests, and 2 visual tes
 ## Success Criteria
 
 - `npm test` passes.
-- `npx playwright test --project=visual` passes after approved baselines exist.
+- `npm run test:visual` passes after approved baselines exist.
 - `npx tsc --noEmit` passes when type checking is needed.
 - UI specs contain no raw Playwright locator construction.
 - New test literals are added to `data/` instead of duplicated in specs.

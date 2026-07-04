@@ -21,8 +21,9 @@ This repository is a TypeScript Playwright framework. UI and visual tests target
 - `npm test`: run all Playwright tests.
 - `npm run test:ui`: run only UI tests.
 - `npm run test:api`: run only API tests; the mock API starts automatically.
-- `npx playwright test --project=visual`: run only visual regression tests.
-- `npx playwright test --project=visual --update-snapshots`: update committed visual baselines.
+- `npm run test:visual`: run only visual regression tests.
+- `npm run test:visual:update`: update visual baselines on the current OS.
+- `npm run test:visual:update:linux`: update CI-compatible Linux visual baselines in Docker.
 - `npm run test:headed`: run tests in a visible browser with one worker.
 - `npm run test:debug`: run tests with `PWDEBUG=1`.
 - `npm run mock-api`: start the mock API manually.
@@ -46,13 +47,15 @@ Keep visual regression tests under `tests/visual/*.spec.ts`. Prefer page object 
 
 Store screenshot baselines only through Playwright's configured snapshot path: `data/visual-baselines{/projectName}/{testFilePath}/{arg}{ext}`. Commit approved baseline PNGs in `data/visual-baselines/`, but do not commit failure diffs from `test-results/` or generated reports from `playwright-report/`.
 
+CI runs on Linux. Before committing intentional visual baseline changes, run `npm run test:visual:update:linux` so screenshots are generated in the same Playwright Docker image used to match the GitHub Actions runner. Do not approve macOS-generated baselines for CI.
+
 Use masks and small diff thresholds only for known unstable regions. Do not hide meaningful UI regressions by broad masking.
 
 There is no lint or format script in `package.json`; match nearby code when editing.
 
 ## Testing Guidelines
 
-Playwright is the test framework. Add UI coverage under `tests/ui/*.spec.ts`, API coverage under `tests/api/*.spec.ts`, and visual coverage under `tests/visual/*.spec.ts`. Name tests by observable behavior, for example `locked_out_user is rejected`. Use `fixtures/test-fixtures.ts` for logged-in UI setup when a test starts from inventory. Before pushing, run `npm test`; for focused work, run `npm run test:ui`, `npm run test:api`, or `npx playwright test --project=visual`.
+Playwright is the test framework. Add UI coverage under `tests/ui/*.spec.ts`, API coverage under `tests/api/*.spec.ts`, and visual coverage under `tests/visual/*.spec.ts`. Name tests by observable behavior, for example `locked_out_user is rejected`. Use `fixtures/test-fixtures.ts` for logged-in UI setup when a test starts from inventory. Before pushing, run `npm test`; for focused work, run `npm run test:ui`, `npm run test:api`, or `npm run test:visual`.
 
 ## Commit & Pull Request Guidelines
 

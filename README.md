@@ -18,10 +18,21 @@ compare screenshots against baselines stored under `data/visual-baselines/`.
 
 - `npm run test:ui` runs the 88 UI tests.
 - `npm run test:api` runs the 15 API tests (the mock API auto-starts).
-- `npx playwright test --project=visual` runs the visual regression tests.
-- `npx playwright test --project=visual --update-snapshots` updates visual baselines.
+- `npm run test:visual` runs the visual regression tests.
+- `npm run test:visual:update` updates visual baselines on the current OS.
+- `npm run test:visual:update:linux` updates Linux visual baselines for CI.
 - `npm run test:headed` runs with a visible browser.
 - `npm run report` opens the last HTML report.
+
+## Visual baselines
+
+CI runs on Linux, so approved visual baselines must be generated in the matching
+Playwright Linux container before push:
+
+    npm run test:visual:update:linux
+
+Do not update CI baselines from macOS or another local OS. Rendering can differ
+enough to make the GitHub Actions visual project fail.
 
 ## Layout
 

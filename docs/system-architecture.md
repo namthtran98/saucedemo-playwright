@@ -77,7 +77,7 @@ flowchart LR
 2. Visual specs reuse fixtures and page object locators for setup and stable targets.
 3. Assertions call `toHaveScreenshot` on pages or locators.
 4. Playwright compares screenshots with baselines in `data/visual-baselines/`.
-5. Intentional visual changes are approved with `npx playwright test --project=visual --update-snapshots`.
+5. Intentional CI visual changes are approved with `npm run test:visual:update:linux`.
 
 ## Mock API
 

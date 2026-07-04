@@ -31,8 +31,9 @@ This project does not deploy an application. The deployable artifact is the test
 | `npm test` | Run all configured Playwright projects |
 | `npm run test:ui` | Run only UI tests |
 | `npm run test:api` | Run only API tests |
-| `npx playwright test --project=visual` | Run only visual regression tests |
-| `npx playwright test --project=visual --update-snapshots` | Update approved visual baselines |
+| `npm run test:visual` | Run only visual regression tests |
+| `npm run test:visual:update` | Update visual baselines on the current OS |
+| `npm run test:visual:update:linux` | Update CI-compatible Linux visual baselines in Docker |
 | `npm run test:headed` | Run headed browser tests with one worker |
 | `npm run test:debug` | Run tests with `PWDEBUG=1` and one worker |
 | `npm run mock-api` | Start the mock API manually |
@@ -67,7 +68,14 @@ Do not commit:
 
 These paths are ignored by `.gitignore`.
 
-Do commit approved visual baseline PNGs under `data/visual-baselines/`.
+Do commit approved visual baseline PNGs under `data/visual-baselines/`. Because CI
+runs on Linux, approved CI baselines should be generated with:
+
+```bash
+npm run test:visual:update:linux
+```
+
+Do not use macOS-generated baseline updates for CI approval.
 
 ## Troubleshooting
 

@@ -62,6 +62,6 @@ Visual assertions belong in `tests/visual/*.spec.ts` and should use `toHaveScree
 - Run `npx tsc --noEmit` after TypeScript structure changes.
 - Run `npm run test:ui` for UI-only changes.
 - Run `npm run test:api` for API-only changes.
-- Run `npx playwright test --project=visual` for visual-only changes.
-- Run `npx playwright test --project=visual --update-snapshots` only when approving intentional visual baseline changes.
+- Run `npm run test:visual` for visual-only changes.
+- Run `npm run test:visual:update:linux` only when approving intentional CI visual baseline changes.
 - Run `npm test` before pushing or after cross-cutting changes.
