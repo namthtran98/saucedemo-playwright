@@ -2,9 +2,9 @@
 
 ## Overview
 
-Playwright Project Pack is a TypeScript Playwright framework for practicing and maintaining end-to-end UI tests, API tests, and visual regression tests. UI and visual tests target SauceDemo at `https://www.saucedemo.com`. API tests target the bundled local mock API in `mock-api/server.mjs`.
+Playwright Project Pack is a TypeScript Playwright framework for practicing and maintaining end-to-end UI tests, API tests, visual regression tests, and accessibility checks. UI, visual, and accessibility tests target SauceDemo at `https://www.saucedemo.com`. API tests target the bundled local mock API in `mock-api/server.mjs`.
 
-The project currently has 105 tests: 88 UI tests, 15 API tests, and 2 visual tests.
+The project currently has 108 tests: 88 UI tests, 15 API tests, 2 visual tests, and 3 accessibility tests.
 
 ## Product Goals
 
@@ -13,6 +13,7 @@ The project currently has 105 tests: 88 UI tests, 15 API tests, and 2 visual tes
 - Keep test data centralized and reusable.
 - Make API tests deterministic by using an offline mock server.
 - Add lightweight visual regression coverage for stable SauceDemo UI elements.
+- Add lightweight axe accessibility coverage for selected SauceDemo flows.
 - Support focused local test runs and full-suite validation.
 
 ## Users
@@ -24,10 +25,11 @@ The project currently has 105 tests: 88 UI tests, 15 API tests, and 2 visual tes
 ## Functional Requirements
 
 - Run UI and API tests with `npm test` without requiring visual baselines.
-- Run UI, API, and visual tests with `npm run test:all` after visual baselines exist.
+- Run UI, API, visual, and accessibility tests with `npm run test:all` after visual baselines exist.
 - Run only UI tests with `npm run test:ui`.
 - Run only API tests with `npm run test:api`.
 - Run visual regression tests with `npm run test:visual`.
+- Run accessibility tests with `npm run test:accessibility`.
 - Start the mock API automatically through Playwright `webServer`.
 - Use SauceDemo `data-test` attributes for stable UI locators.
 - Keep UI locators and interactions in page objects.
@@ -55,6 +57,7 @@ The project currently has 105 tests: 88 UI tests, 15 API tests, and 2 visual tes
 
 - `npm test` passes for UI and API coverage.
 - `npm run test:visual` passes after approved baselines exist.
+- `npm run test:accessibility` passes for selected accessibility checks.
 - `npx tsc --noEmit` passes when type checking is needed.
 - UI specs contain no raw Playwright locator construction.
 - New test literals are added to `data/` instead of duplicated in specs.

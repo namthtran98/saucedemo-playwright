@@ -1,12 +1,14 @@
 # Playwright Project Pack
 
-A production-ready TypeScript Playwright framework with **105 tests (88 UI + 15 API + 2 visual)**.
+A production-ready TypeScript Playwright framework with **108 tests (88 UI + 15 API + 2 visual + 3 accessibility)**.
 
 The UI tests run against the public practice site saucedemo.com. The 15 API tests
 run against a bundled, zero-dependency mock API that Playwright starts for you, so
 they pass deterministically offline.
 Visual tests run against SauceDemo through a dedicated Playwright project and
 compare screenshots against baselines restored into `data/visual-baselines/`.
+Accessibility tests use axe against selected SauceDemo flows and run through a
+dedicated Playwright project.
 
 ## Quick start
 
@@ -17,10 +19,11 @@ compare screenshots against baselines restored into `data/visual-baselines/`.
 ## Useful commands
 
 - `npm test` runs the 88 UI tests and 15 API tests.
-- `npm run test:all` runs UI, API, and visual tests after visual baselines exist.
+- `npm run test:all` runs UI, API, visual, and accessibility tests after visual baselines exist.
 - `npm run test:ui` runs the 88 UI tests.
 - `npm run test:api` runs the 15 API tests (the mock API auto-starts).
 - `npm run test:visual` runs the visual regression tests.
+- `npm run test:accessibility` runs the 3 accessibility checks.
 - `npm run test:visual:update` updates visual baselines on the current OS.
 - `npm run test:visual:update:linux` updates Linux visual baselines for CI.
 - `npm run test:headed` runs with a visible browser.
@@ -50,6 +53,7 @@ and Linux to make the GitHub Actions visual project fail.
 - `tests/ui/` UI suites: login, products, cart, checkout.
 - `tests/api/` API suite against the bundled mock.
 - `tests/visual/` visual regression specs for stable UI snapshots.
+- `tests/accessibility/` axe accessibility checks for selected SauceDemo flows.
 - `data/visual-baselines/` ignored runtime screenshot baselines for visual tests.
 - `mock-api/server.mjs` the bundled mock REST API.
 - `data/` external test data.

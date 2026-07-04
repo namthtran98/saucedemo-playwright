@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository is a compact Playwright test framework. It combines UI automation and visual regression coverage against SauceDemo with API tests against a deterministic local mock API.
+This repository is a compact Playwright test framework. It combines UI automation, visual regression coverage, and accessibility checks against SauceDemo with API tests against a deterministic local mock API.
 
 ## Top-Level Structure
 
@@ -11,6 +11,7 @@ This repository is a compact Playwright test framework. It combines UI automatio
 | `tests/ui/` | UI specs for login, products, cart, and checkout |
 | `tests/api/` | API specs for products, users, login, and posts |
 | `tests/visual/` | Visual regression specs for stable SauceDemo UI snapshots |
+| `tests/accessibility/` | Axe accessibility checks for selected SauceDemo flows |
 | `page-objects/` | Page Object Model classes for SauceDemo pages |
 | `page-objects/components/` | Reusable page components such as `SideMenu` |
 | `fixtures/` | Custom Playwright fixtures |
@@ -29,6 +30,7 @@ This repository is a compact Playwright test framework. It combines UI automatio
 | Checkout UI | `tests/ui/checkout.spec.ts` | Checkout form validation, overview totals, completion flow |
 | API | `tests/api/api.spec.ts` | Products, categories, users, login, posts CRUD-like behavior |
 | Visual | `tests/visual/visual.spec.ts` | Login button and inventory cart badge visual baselines |
+| Accessibility | `tests/accessibility/accessibility.spec.ts` | Login, inventory, and checkout axe checks |
 
 ## Page Objects
 
@@ -53,11 +55,12 @@ This repository is a compact Playwright test framework. It combines UI automatio
 
 ## Runtime Behavior
 
-`playwright.config.ts` defines three projects:
+`playwright.config.ts` defines four projects:
 
 - `ui`: Desktop Chrome, SauceDemo base URL, `tests/ui/*.spec.ts`.
 - `api`: local mock API base URL, `tests/api/*.spec.ts`.
 - `visual`: Desktop Chrome, SauceDemo base URL, `tests/visual/*.spec.ts`.
+- `accessibility`: Desktop Chrome, SauceDemo base URL, `tests/accessibility/*.spec.ts`.
 
 Visual baselines use `expect.toHaveScreenshot.pathTemplate` and are restored or generated under ignored `data/visual-baselines/{platform}{/projectName}/{testFilePath}/{arg}{ext}`.
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The project is a Playwright test framework with three execution paths: live UI tests against SauceDemo, visual regression tests against SauceDemo, and local API tests against an in-memory mock REST API.
+The project is a Playwright test framework with four execution paths: live UI tests against SauceDemo, visual regression tests against SauceDemo, accessibility checks against SauceDemo, and local API tests against an in-memory mock REST API.
 
 ## Architecture Diagram
 
@@ -12,9 +12,11 @@ flowchart LR
   UIProject[UI project]
   APIProject[API project]
   VisualProject[Visual project]
+  AccessibilityProject[Accessibility project]
   SpecsUI[tests/ui/*.spec.ts]
   SpecsAPI[tests/api/api.spec.ts]
   SpecsVisual[tests/visual/*.spec.ts]
+  SpecsAccessibility[tests/accessibility/*.spec.ts]
   Fixtures[fixtures/test-fixtures.ts]
   POM[page-objects/*]
   Data[data/*]
@@ -26,21 +28,26 @@ flowchart LR
   Config --> UIProject
   Config --> APIProject
   Config --> VisualProject
+  Config --> AccessibilityProject
   Config --> MockAPI
   Artifacts --> Baselines
   UIProject --> SpecsUI
   APIProject --> SpecsAPI
   VisualProject --> SpecsVisual
+  AccessibilityProject --> SpecsAccessibility
   SpecsUI --> Fixtures
   SpecsVisual --> Fixtures
+  SpecsAccessibility --> Fixtures
   Fixtures --> POM
   SpecsUI --> POM
   SpecsVisual --> POM
+  SpecsAccessibility --> POM
   SpecsUI --> Data
   SpecsAPI --> Data
   SpecsVisual --> Baselines
   SpecsUI --> SauceDemo
   SpecsVisual --> SauceDemo
+  SpecsAccessibility --> SauceDemo
   SpecsAPI --> MockAPI
 ```
 
@@ -81,6 +88,13 @@ flowchart LR
 4. CI restores baselines from the latest successful `main` workflow artifact, or generates missing baselines when no artifact exists.
 5. Playwright compares screenshots with baselines in ignored `data/visual-baselines/`.
 6. Intentional CI visual changes are published through the manual `Playwright Tests` workflow with `visual_baseline_update` set to `changed` or `all`.
+
+## Accessibility Test Flow
+
+1. The `accessibility` project runs `tests/accessibility/*.spec.ts` against SauceDemo.
+2. Accessibility specs reuse fixtures and page objects for setup.
+3. Assertions use `@axe-core/playwright` with WCAG 2A and 2AA tags.
+4. The inventory scan excludes only the known unlabeled SauceDemo sort select.
 
 ## Mock API
 
