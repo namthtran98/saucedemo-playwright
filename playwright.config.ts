@@ -40,5 +40,10 @@ export default defineConfig({
       testMatch: /tests\/visual\/.*\.spec\.ts/,
       use: { ...devices['Desktop Chrome'], baseURL: 'https://www.saucedemo.com' },
     },
+    {
+      name: 'accessibility',
+      testMatch: /tests\/accessibility\/.*\.spec\.ts/,
+      use: { ...devices['Desktop Chrome'], baseURL: 'https://www.saucedemo.com' },
+    }
   ],
 })
