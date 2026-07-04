@@ -45,7 +45,7 @@ Keep test literals in `data/` modules instead of hardcoding them in specs. Use t
 
 Keep visual regression tests under `tests/visual/*.spec.ts`. Prefer page object locator properties and fixtures the same way UI specs do. Visual specs should assert stable UI snapshots with `toHaveScreenshot`; keep business assertions in `tests/ui/*.spec.ts`.
 
-Store screenshot baselines only through Playwright's configured snapshot path: `data/visual-baselines{/projectName}/{testFilePath}/{arg}{ext}`. Do not commit baseline PNGs, failure diffs from `test-results/`, or generated reports from `playwright-report/`.
+Store screenshot baselines only through Playwright's configured snapshot path: `data/visual-baselines/{platform}{/projectName}/{testFilePath}/{arg}{ext}`. Do not commit baseline PNGs, failure diffs from `test-results/`, or generated reports from `playwright-report/`.
 
 CI runs on Linux and restores visual baselines from the latest successful `main` workflow artifact named `visual-baselines`. If no artifact exists, CI generates missing baselines for that run and uploads them. Before reviewing intentional visual baseline changes locally, run `npm run test:visual:update:linux` so screenshots are generated in the same Playwright Docker image used to match the GitHub Actions runner. Do not approve macOS-generated baselines for CI.
 

@@ -10,7 +10,7 @@ export default defineConfig({
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : [['html', { open: 'never' }]],
   expect: {
     toHaveScreenshot: {
-      pathTemplate: 'data/visual-baselines{/projectName}/{testFilePath}/{arg}{ext}',
+      pathTemplate: 'data/visual-baselines/{platform}{/projectName}/{testFilePath}/{arg}{ext}',
     },
   },
   use: {

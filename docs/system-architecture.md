@@ -56,7 +56,7 @@ flowchart LR
 - Traces are collected on first retry.
 - Screenshots are collected only on failure.
 - `data-test` is the configured test id attribute.
-- `expect.toHaveScreenshot.pathTemplate` stores runtime visual baselines under ignored `data/visual-baselines/`.
+- `expect.toHaveScreenshot.pathTemplate` stores runtime visual baselines under ignored `data/visual-baselines/`, split by platform.
 
 ## UI Test Flow
 
