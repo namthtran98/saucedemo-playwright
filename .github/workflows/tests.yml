@@ -3,6 +3,17 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+    inputs:
+      visual_baseline_update:
+        description: Update mode for visual baselines
+        type: choice
+        required: true
+        default: missing
+        options:
+          - missing
+          - changed
+          - all
 permissions:
   contents: read
   actions: read
@@ -30,8 +41,16 @@ jobs:
           else
             echo "No published visual baseline artifact found; missing baselines will be generated for this run."
           fi
-      - name: Generate missing visual baselines
-        run: npm run test:visual -- --update-snapshots=missing || true
+      - name: Generate or update visual baselines
+        env:
+          VISUAL_BASELINE_UPDATE: ${{ github.event_name == 'workflow_dispatch' && inputs.visual_baseline_update || 'missing' }}
+        run: |
+          npm run test:visual -- --update-snapshots="$VISUAL_BASELINE_UPDATE" || {
+            if [ "$VISUAL_BASELINE_UPDATE" = "missing" ]; then
+              exit 0
+            fi
+            exit 1
+          }
       - name: Run tests
         run: npm test
       - uses: actions/upload-artifact@v4

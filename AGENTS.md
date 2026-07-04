@@ -47,7 +47,7 @@ Keep visual regression tests under `tests/visual/*.spec.ts`. Prefer page object 
 
 Store screenshot baselines only through Playwright's configured snapshot path: `data/visual-baselines/{platform}{/projectName}/{testFilePath}/{arg}{ext}`. Do not commit baseline PNGs, failure diffs from `test-results/`, or generated reports from `playwright-report/`.
 
-CI runs on Linux and restores visual baselines from the latest successful `main` workflow artifact named `visual-baselines`. If no artifact exists, CI generates missing baselines for that run and uploads them. Before reviewing intentional visual baseline changes locally, run `npm run test:visual:update:linux` so screenshots are generated in the same Playwright Docker image used to match the GitHub Actions runner. Do not approve macOS-generated baselines for CI.
+CI runs on Linux and restores visual baselines from the latest successful `main` workflow artifact named `visual-baselines`. If no artifact exists, CI generates missing baselines for that run and uploads them. For intentional visual changes, run the `Playwright Tests` workflow manually with `visual_baseline_update` set to `changed` or `all` so CI publishes a replacement artifact. Before reviewing intentional visual baseline changes locally, run `npm run test:visual:update:linux` so screenshots are generated in the same Playwright Docker image used to match the GitHub Actions runner. Do not approve macOS-generated baselines for CI.
 
 Use masks and small diff thresholds only for known unstable regions. Do not hide meaningful UI regressions by broad masking.
 

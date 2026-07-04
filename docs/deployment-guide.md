@@ -73,6 +73,10 @@ ignored by git. CI restores baselines from the latest successful `main` workflow
 artifact named `visual-baselines`. If no artifact exists, CI generates missing
 baselines for that run and uploads them as a new artifact.
 
+For intentional visual changes, manually run the `Playwright Tests` workflow and
+set `visual_baseline_update` to `changed` or `all`. That controlled path updates
+the artifact without committing PNGs to the repository.
+
 Because CI runs on Linux, local baseline review should use:
 
 ```bash

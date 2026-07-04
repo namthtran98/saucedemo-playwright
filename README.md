@@ -30,6 +30,9 @@ CI runs on Linux. The `data/visual-baselines/` directory is ignored by git, so
 baseline PNGs are not committed. CI restores visual baselines from the latest
 successful `main` workflow artifact named `visual-baselines`; if none exists, it
 generates missing baselines for that run and uploads them as an artifact.
+When a visual change is intentional, manually run the `Playwright Tests`
+workflow with `visual_baseline_update` set to `changed` or `all` to publish a
+replacement baseline artifact.
 
 For local review, generate Linux-compatible baselines in the matching Playwright
 container:

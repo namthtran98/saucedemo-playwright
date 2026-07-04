@@ -80,7 +80,7 @@ flowchart LR
 3. Assertions call `toHaveScreenshot` on pages or locators.
 4. CI restores baselines from the latest successful `main` workflow artifact, or generates missing baselines when no artifact exists.
 5. Playwright compares screenshots with baselines in ignored `data/visual-baselines/`.
-6. Intentional CI visual changes are reviewed with `npm run test:visual:update:linux`.
+6. Intentional CI visual changes are published through the manual `Playwright Tests` workflow with `visual_baseline_update` set to `changed` or `all`.
 
 ## Mock API
 
