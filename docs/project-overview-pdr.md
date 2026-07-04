@@ -23,7 +23,8 @@ The project currently has 105 tests: 88 UI tests, 15 API tests, and 2 visual tes
 
 ## Functional Requirements
 
-- Run all tests with `npm test`.
+- Run UI and API tests with `npm test` without requiring visual baselines.
+- Run UI, API, and visual tests with `npm run test:all` after visual baselines exist.
 - Run only UI tests with `npm run test:ui`.
 - Run only API tests with `npm run test:api`.
 - Run visual regression tests with `npm run test:visual`.
@@ -52,7 +53,7 @@ The project currently has 105 tests: 88 UI tests, 15 API tests, and 2 visual tes
 
 ## Success Criteria
 
-- `npm test` passes.
+- `npm test` passes for UI and API coverage.
 - `npm run test:visual` passes after approved baselines exist.
 - `npx tsc --noEmit` passes when type checking is needed.
 - UI specs contain no raw Playwright locator construction.

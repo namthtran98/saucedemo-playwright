@@ -32,7 +32,7 @@ The framework is usable and validated with 105 tests:
 - Keep POM classes focused on page interaction.
 - Keep new constants in `data/`.
 - Keep visual baseline PNGs out of git; use CI artifacts or local ignored files.
-- Run the narrowest relevant suite during iteration, then `npm test` before pushing.
+- Run the narrowest relevant suite during iteration, then `npm test` before pushing. Use `npm run test:all` when visual baselines exist and visual coverage is in scope.
 - Update docs when framework structure, commands, or conventions change.
 
 ## Risks

@@ -18,7 +18,8 @@ This repository is a TypeScript Playwright framework. UI and visual tests target
 
 - `npm install`: install dependencies.
 - `npx playwright install --with-deps`: install browser binaries and required system dependencies.
-- `npm test`: run all Playwright tests.
+- `npm test`: run UI and API tests without requiring visual baselines.
+- `npm run test:all`: run UI, API, and visual tests after visual baselines exist.
 - `npm run test:ui`: run only UI tests.
 - `npm run test:api`: run only API tests; the mock API starts automatically.
 - `npm run test:visual`: run only visual regression tests.
@@ -55,7 +56,7 @@ There is no lint or format script in `package.json`; match nearby code when edit
 
 ## Testing Guidelines
 
-Playwright is the test framework. Add UI coverage under `tests/ui/*.spec.ts`, API coverage under `tests/api/*.spec.ts`, and visual coverage under `tests/visual/*.spec.ts`. Name tests by observable behavior, for example `locked_out_user is rejected`. Use `fixtures/test-fixtures.ts` for logged-in UI setup when a test starts from inventory. Before pushing, run `npm test`; for focused work, run `npm run test:ui`, `npm run test:api`, or `npm run test:visual`.
+Playwright is the test framework. Add UI coverage under `tests/ui/*.spec.ts`, API coverage under `tests/api/*.spec.ts`, and visual coverage under `tests/visual/*.spec.ts`. Name tests by observable behavior, for example `locked_out_user is rejected`. Use `fixtures/test-fixtures.ts` for logged-in UI setup when a test starts from inventory. Before pushing, run `npm test`; run `npm run test:visual` only after visual baselines exist or have been generated. For focused work, run `npm run test:ui`, `npm run test:api`, or `npm run test:visual`.
 
 ## Commit & Pull Request Guidelines
 

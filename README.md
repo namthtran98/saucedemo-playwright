@@ -16,6 +16,8 @@ compare screenshots against baselines restored into `data/visual-baselines/`.
 
 ## Useful commands
 
+- `npm test` runs the 88 UI tests and 15 API tests.
+- `npm run test:all` runs UI, API, and visual tests after visual baselines exist.
 - `npm run test:ui` runs the 88 UI tests.
 - `npm run test:api` runs the 15 API tests (the mock API auto-starts).
 - `npm run test:visual` runs the visual regression tests.

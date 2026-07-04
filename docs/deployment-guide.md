@@ -18,7 +18,7 @@ This project does not deploy an application. The deployable artifact is the test
    npx playwright install --with-deps
    ```
 
-3. Run the full suite:
+3. Run UI and API tests:
 
    ```bash
    npm test
@@ -28,7 +28,8 @@ This project does not deploy an application. The deployable artifact is the test
 
 | Command | Purpose |
 | --- | --- |
-| `npm test` | Run all configured Playwright projects |
+| `npm test` | Run UI and API tests without requiring visual baselines |
+| `npm run test:all` | Run UI, API, and visual tests after visual baselines exist |
 | `npm run test:ui` | Run only UI tests |
 | `npm run test:api` | Run only API tests |
 | `npm run test:visual` | Run only visual regression tests |
@@ -54,8 +55,10 @@ A minimal CI job should:
 2. Set up Node.js.
 3. Run `npm ci`.
 4. Run `npx playwright install --with-deps`.
-5. Run `npm test`.
-6. Upload `playwright-report/` and `test-results/` only as artifacts, not committed files.
+5. Restore or generate visual baselines.
+6. Run `npm test`.
+7. Run `npm run test:visual`.
+8. Upload `playwright-report/`, `test-results/`, and baseline artifacts, not committed files.
 
 ## Generated Artifacts
 

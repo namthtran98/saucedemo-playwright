@@ -4,7 +4,8 @@
   "private": true,
   "description": "Production-ready Playwright framework with 105 tests (88 UI + 15 API + 2 visual).",
   "scripts": {
-    "test": "playwright test",
+    "test": "playwright test --project=ui --project=api",
+    "test:all": "npm test && npm run test:visual",
     "test:ui": "playwright test --project=ui",
     "test:api": "playwright test --project=api",
     "test:visual": "playwright test --project=visual",

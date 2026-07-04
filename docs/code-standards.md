@@ -64,4 +64,5 @@ Visual assertions belong in `tests/visual/*.spec.ts` and should use `toHaveScree
 - Run `npm run test:api` for API-only changes.
 - Run `npm run test:visual` for visual-only changes.
 - Run `npm run test:visual:update:linux` only when approving intentional CI visual baseline changes.
-- Run `npm test` before pushing or after cross-cutting changes.
+- Run `npm test` before pushing or after cross-cutting non-visual changes.
+- Run `npm run test:all` after visual baselines exist when changes affect both functional and visual coverage.
