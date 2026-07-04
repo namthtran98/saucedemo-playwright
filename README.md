@@ -1,6 +1,6 @@
 # Playwright Project Pack
 
-A production-ready TypeScript Playwright framework with **125 tests (88 UI + 32 API + 2 visual + 3 accessibility)**.
+A production-ready TypeScript Playwright framework with **128 tests (91 UI + 32 API + 2 visual + 3 accessibility)**.
 
 The UI tests run against the public practice site saucedemo.com. The 32 API tests
 run against a bundled, zero-dependency mock API that Playwright starts for you, so
@@ -19,9 +19,9 @@ dedicated Playwright project.
 
 ## Useful commands
 
-- `npm test` runs the 88 UI tests and 32 API tests.
+- `npm test` runs the 91 UI tests and 32 API tests.
 - `npm run test:all` runs UI, API, visual, and accessibility tests after visual baselines exist.
-- `npm run test:ui` runs the 88 UI tests.
+- `npm run test:ui` runs the 91 UI tests.
 - `npm run test:api` runs the 32 API tests (the mock API auto-starts).
 - `npm run test:visual` runs the visual regression tests.
 - `npm run test:accessibility` runs the 3 accessibility checks.
@@ -52,7 +52,7 @@ and Linux to make the GitHub Actions visual project fail.
 ## Layout
 
 - `page-objects/` Page Object Model classes (getByTestId / getByRole).
-- `tests/ui/` UI suites: login, products, cart, checkout.
+- `tests/ui/` UI suites: login, menu, products, cart, checkout.
 - `tests/api/` API suite against the bundled mock.
 - `tests/visual/` visual regression specs for stable UI snapshots.
 - `tests/accessibility/` axe accessibility checks for selected SauceDemo flows.

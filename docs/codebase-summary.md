@@ -8,7 +8,7 @@ This repository is a compact Playwright test framework. It combines UI automatio
 
 | Path | Purpose |
 | --- | --- |
-| `tests/ui/` | UI specs for login, products, cart, and checkout |
+| `tests/ui/` | UI specs for login, menu, products, cart, and checkout |
 | `tests/api/` | API specs for products, users, login, and posts |
 | `tests/visual/` | Visual regression specs for stable SauceDemo UI snapshots |
 | `tests/accessibility/` | Axe accessibility checks for selected SauceDemo flows |
@@ -25,8 +25,9 @@ This repository is a compact Playwright test framework. It combines UI automatio
 
 | Suite | File | Focus |
 | --- | --- | --- |
-| Login UI | `tests/ui/login.spec.ts` | Valid users, invalid users, required-field errors, logout |
-| Products UI | `tests/ui/products.spec.ts` | Inventory listing, sorting, product detail, add/remove cart, menu, footer |
+| Login UI | `tests/ui/login.spec.ts` | Valid users, invalid users, and required-field errors |
+| Menu UI | `tests/ui/menu.spec.ts` | Side menu open, close, All Items, About target, logout, and reset app state |
+| Products UI | `tests/ui/products.spec.ts` | Inventory listing, sorting, product detail, add/remove cart, and footer |
 | Cart UI | `tests/ui/cart.spec.ts` | Cart persistence, quantities, removal, checkout navigation |
 | Checkout UI | `tests/ui/checkout.spec.ts` | Checkout form validation, overview totals, completion flow |
 | API | `tests/api/api.spec.ts`, `tests/api/contract.spec.ts` | Products, categories, users, login, posts behavior and response contracts |
@@ -42,7 +43,7 @@ This repository is a compact Playwright test framework. It combines UI automatio
 | `ProductDetailPage` | Product detail locators, add to cart, back navigation, readiness check |
 | `CartPage` | Cart locators, item queries, removal, checkout, continue shopping |
 | `CheckoutPage` | Checkout form, overview, completion actions, price parsing, readiness checks |
-| `SideMenu` | Menu links, logout, reset app state, component readiness check |
+| `SideMenu` | Menu state checks, navigation links, logout, and reset app state |
 
 ## Data Modules
 

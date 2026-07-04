@@ -177,20 +177,6 @@ test.describe('Products', () => {
   })
 
   // 22
-  test('open menu shows the All Items, About, Logout, Reset links', async () => {
-    await inventory.sideMenu.open()
-    await inventory.sideMenu.expectLoaded()
-  })
-
-  // 23
-  test('reset app state clears the cart badge after adding an item', async () => {
-    await inventory.addToCartByName(PRODUCTS.backpack.name)
-    await expectCartCount(1)
-    await inventory.sideMenu.resetAppState()
-    await expectCartCount(0)
-  })
-
-  // 24
   test('footer shows the Sauce Labs copyright and three social links', async () => {
     await expect(inventory.footerCopy).toContainText(INVENTORY_UI_TEXT.footerCopy)
     await expect(inventory.twitterLink).toBeVisible()
