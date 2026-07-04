@@ -14,10 +14,11 @@ flowchart LR
   VisualProject[Visual project]
   AccessibilityProject[Accessibility project]
   SpecsUI[tests/ui/*.spec.ts]
-  SpecsAPI[tests/api/api.spec.ts]
+  SpecsAPI[tests/api/*.spec.ts]
   SpecsVisual[tests/visual/*.spec.ts]
   SpecsAccessibility[tests/accessibility/*.spec.ts]
   Fixtures[fixtures/test-fixtures.ts]
+  TestHelpers[test-helpers/*]
   POM[page-objects/*]
   Data[data/*]
   Baselines[data/visual-baselines/* ignored]
@@ -38,6 +39,7 @@ flowchart LR
   SpecsUI --> Fixtures
   SpecsVisual --> Fixtures
   SpecsAccessibility --> Fixtures
+  SpecsAPI --> TestHelpers
   Fixtures --> POM
   SpecsUI --> POM
   SpecsVisual --> POM
@@ -79,6 +81,7 @@ flowchart LR
 2. The `api` project uses `http://localhost:${MOCK_API_PORT}` as `baseURL`.
 3. Specs call endpoints through Playwright `request`.
 4. Assertions compare responses with constants from `data/api-test-data.ts`.
+5. Contract specs validate mock API response shapes with JSON schemas.
 
 ## Visual Test Flow
 
@@ -116,6 +119,7 @@ The mock API uses Node `http` only. It keeps products, categories, users, and po
 
 - Page objects own UI locators, interactions, and readiness checks.
 - Specs own scenario setup and business assertions.
+- `test-helpers/` owns reusable Playwright-aware assertion and validation helpers.
 - `data/` owns shared literals and expected values.
 - `data/visual-baselines/` holds ignored runtime screenshot baselines.
 - `mock-api/` owns deterministic API behavior.

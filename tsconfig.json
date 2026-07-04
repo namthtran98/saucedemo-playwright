@@ -5,9 +5,10 @@
     "moduleResolution": "Bundler",
     "strict": true,
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "types": ["node"],
     "noEmit": true
   },
-  "include": ["tests", "page-objects", "fixtures", "data", "playwright.config.ts"]
+  "include": ["tests", "page-objects", "fixtures", "test-helpers", "data", "playwright.config.ts"]
 }

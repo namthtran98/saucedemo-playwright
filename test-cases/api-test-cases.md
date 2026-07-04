@@ -1,6 +1,6 @@
 # API Manual Test Cases
 
-Automated source: `tests/api/api.spec.ts`
+Automated sources: `tests/api/api.spec.ts`, `tests/api/contract.spec.ts`
 
 ## Common Preconditions
 
@@ -25,3 +25,20 @@ Automated source: `tests/api/api.spec.ts`
 | API-013 | Posts list returns expected count | `GET /posts` | 1. Send GET request to `/posts`.<br>2. Count returned items. | Response contains 100 posts. |
 | API-014 | Updating known post returns updated data | `PUT /posts/1` with `{ "title": "Updated" }` | 1. Send PUT request to `/posts/1`.<br>2. Inspect response title. | Status is `200`; response title is `Updated`. |
 | API-015 | Deleting known post returns OK | `DELETE /posts/1` | 1. Send DELETE request to `/posts/1`. | Status is `200`. |
+| API-016 | Health endpoint matches contract | `GET /health` | 1. Send GET request to `/health`.<br>2. Inspect response body. | Status is `200`; body has only `status` with value `ok`. |
+| API-017 | Products list matches contract | `GET /products` | 1. Send GET request to `/products`.<br>2. Inspect each array item. | Status is `200`; each product has `id`, `title`, `price`, `category`, and `description`. |
+| API-018 | Product categories match contract | `GET /products/categories` | 1. Send GET request to `/products/categories`.<br>2. Inspect array items. | Status is `200`; body is an array of non-empty strings. |
+| API-019 | Created product matches contract | `POST /products` with `{ "title": "New", "price": 9.99 }` | 1. Send POST request with payload.<br>2. Inspect response body. | Status is `201`; body has only `id`, `title`, and `price`. |
+| API-020 | Product detail matches contract | `GET /products/1` | 1. Send GET request to `/products/1`.<br>2. Inspect response body. | Status is `200`; body matches product object contract. |
+| API-021 | Missing product error matches contract | `GET /products/9999` | 1. Send GET request to missing product id.<br>2. Inspect response body. | Status is `404`; body has only non-empty `error`. |
+| API-022 | Users list matches contract | `GET /users` | 1. Send GET request to `/users`.<br>2. Inspect each array item. | Status is `200`; each user has `id`, `name`, and `email`. |
+| API-023 | User detail matches contract | `GET /users/2` | 1. Send GET request to `/users/2`.<br>2. Inspect response body. | Status is `200`; body matches user object contract. |
+| API-024 | Missing user error matches contract | `GET /users/999` | 1. Send GET request to missing user id.<br>2. Inspect response body. | Status is `404`; body has only non-empty `error`. |
+| API-025 | Valid login token matches contract | `POST /login` with `{ "email": "a@b.com", "password": "pw" }` | 1. Send login POST request with credentials.<br>2. Inspect response body. | Status is `200`; body has only non-empty `token`. |
+| API-026 | Login error matches contract | `POST /login` with `{ "email": "a@b.com" }` | 1. Send login POST request without password.<br>2. Inspect response body. | Status is `400`; body has only non-empty `error`. |
+| API-027 | Posts list matches contract | `GET /posts` | 1. Send GET request to `/posts`.<br>2. Inspect each array item. | Status is `200`; each post has `id`, `title`, `body`, and `userId`. |
+| API-028 | Created post matches contract | `POST /posts` with `{ "title": "New post", "body": "New post body", "userId": 1 }` | 1. Send POST request with payload.<br>2. Inspect response body. | Status is `201`; body matches post object contract. |
+| API-029 | Post detail matches contract | `GET /posts/1` | 1. Send GET request to `/posts/1`.<br>2. Inspect response body. | Status is `200`; body matches post object contract. |
+| API-030 | Updated post matches contract | `PUT /posts/1` with `{ "title": "Updated" }` | 1. Send PUT request to `/posts/1`.<br>2. Inspect response body. | Status is `200`; body has only `id` and `title`. |
+| API-031 | Delete post response matches contract | `DELETE /posts/1` | 1. Send DELETE request to `/posts/1`.<br>2. Inspect response body. | Status is `200`; body is an empty object. |
+| API-032 | Missing post error matches contract | `GET /posts/9999` | 1. Send GET request to missing post id.<br>2. Inspect response body. | Status is `404`; body has only non-empty `error`. |

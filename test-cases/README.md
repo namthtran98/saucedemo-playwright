@@ -12,8 +12,8 @@ This folder converts the current automated Playwright specs into manual test cas
 | Products | `products-test-cases.md` | `tests/ui/products.spec.ts` | 24 |
 | Cart | `cart-test-cases.md` | `tests/ui/cart.spec.ts` | 23 |
 | Checkout | `checkout-test-cases.md` | `tests/ui/checkout.spec.ts` | 27 |
-| API | `api-test-cases.md` | `tests/api/api.spec.ts` | 15 |
-| Total |  |  | 103 |
+| API | `api-test-cases.md` | `tests/api/*.spec.ts` | 32 |
+| Total |  |  | 120 |
 
 ## Common UI Preconditions
 
