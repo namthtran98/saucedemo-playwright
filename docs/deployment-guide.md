@@ -34,6 +34,7 @@ This project does not deploy an application. The deployable artifact is the test
 | `npm run test:api` | Run only API tests |
 | `npm run test:visual` | Run only visual regression tests |
 | `npm run test:accessibility` | Run only accessibility checks |
+| `npm run generate:api-contract-types` | Regenerate API contract declarations from schemas |
 | `npm run test:visual:update` | Update visual baselines on the current OS |
 | `npm run test:visual:update:linux` | Update CI-compatible Linux visual baselines in Docker |
 | `npm run test:headed` | Run headed browser tests with one worker |

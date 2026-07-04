@@ -4,7 +4,7 @@
 
 Playwright Project Pack is a TypeScript Playwright framework for practicing and maintaining end-to-end UI tests, API tests, visual regression tests, and accessibility checks. UI, visual, and accessibility tests target SauceDemo at `https://www.saucedemo.com`. API tests target the bundled local mock API in `mock-api/server.mjs`.
 
-The project currently has 108 tests: 88 UI tests, 15 API tests, 2 visual tests, and 3 accessibility tests.
+The project currently has 125 tests: 88 UI tests, 32 API tests, 2 visual tests, and 3 accessibility tests.
 
 ## Product Goals
 

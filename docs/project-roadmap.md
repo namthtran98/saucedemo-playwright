@@ -2,10 +2,10 @@
 
 ## Current State
 
-The framework is usable and validated with 108 tests:
+The framework is usable and validated with 125 tests:
 
 - 88 UI tests across login, products, cart, and checkout.
-- 15 API tests against the bundled mock API.
+- 32 API tests against the bundled mock API.
 - 2 visual regression tests for login and inventory UI snapshots.
 - 3 accessibility checks for login, inventory, and checkout flows.
 - POM structure is in place.

@@ -30,15 +30,19 @@ These guidelines define how tests should be designed in this Playwright framewor
 
 - Store repeated values in `data/`.
 - Keep API constants in `data/api-test-data.ts`.
+- Keep API response contract schemas in `data/api-contract-schemas.json`.
+- Keep generated API response types in `data/api-contract-types.d.ts`.
 - Keep SauceDemo product data in `data/products.ts`.
 - Keep user credentials and invalid credential values in `data/users.ts`.
 - Keep validation messages in `data/checkout-error-messages.ts`.
+- Keep Playwright-aware reusable assertion helpers in `test-helpers/`, not `data/`.
 
 ## Assertion Design
 
 - Assert business outcomes in specs.
 - Use page object readiness helpers after navigation.
 - Use local assertion helpers inside specs for repeated domain checks such as cart badge count.
+- Use `test-helpers/` for reusable assertions shared across specs or backed by validation libraries.
 - Avoid broad assertions when a specific behavior is under test.
 
 ## Visual Regression Design

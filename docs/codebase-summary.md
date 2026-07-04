@@ -12,6 +12,7 @@ This repository is a compact Playwright test framework. It combines UI automatio
 | `tests/api/` | API specs for products, users, login, and posts |
 | `tests/visual/` | Visual regression specs for stable SauceDemo UI snapshots |
 | `tests/accessibility/` | Axe accessibility checks for selected SauceDemo flows |
+| `test-helpers/` | Reusable Playwright assertion and validation helpers |
 | `page-objects/` | Page Object Model classes for SauceDemo pages |
 | `page-objects/components/` | Reusable page components such as `SideMenu` |
 | `fixtures/` | Custom Playwright fixtures |
@@ -28,7 +29,7 @@ This repository is a compact Playwright test framework. It combines UI automatio
 | Products UI | `tests/ui/products.spec.ts` | Inventory listing, sorting, product detail, add/remove cart, menu, footer |
 | Cart UI | `tests/ui/cart.spec.ts` | Cart persistence, quantities, removal, checkout navigation |
 | Checkout UI | `tests/ui/checkout.spec.ts` | Checkout form validation, overview totals, completion flow |
-| API | `tests/api/api.spec.ts` | Products, categories, users, login, posts CRUD-like behavior |
+| API | `tests/api/api.spec.ts`, `tests/api/contract.spec.ts` | Products, categories, users, login, posts behavior and response contracts |
 | Visual | `tests/visual/visual.spec.ts` | Login button and inventory cart badge visual baselines |
 | Accessibility | `tests/accessibility/accessibility.spec.ts` | Login, inventory, and checkout axe checks |
 
@@ -52,6 +53,14 @@ This repository is a compact Playwright test framework. It combines UI automatio
 | `data/checkout-test-data.ts` | Checkout form values and expected checkout labels |
 | `data/checkout-error-messages.ts` | Login and checkout validation messages |
 | `data/api-test-data.ts` | API endpoints, HTTP status codes, payloads, expected values |
+| `data/api-contract-schemas.json` | JSON schemas for mock API contract tests |
+| `data/api-contract-types.d.ts` | Generated TypeScript declarations from API contract schemas |
+
+## Test Helpers
+
+| File | Contents |
+| --- | --- |
+| `test-helpers/api-contract-validators.ts` | AJV validators and Playwright response contract assertions |
 
 ## Runtime Behavior
 
