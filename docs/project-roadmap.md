@@ -2,11 +2,12 @@
 
 ## Current State
 
-The framework is usable and validated with 105 tests:
+The framework is usable and validated with 108 tests:
 
 - 88 UI tests across login, products, cart, and checkout.
 - 15 API tests against the bundled mock API.
 - 2 visual regression tests for login and inventory UI snapshots.
+- 3 accessibility checks for login, inventory, and checkout flows.
 - POM structure is in place.
 - Shared data modules cover UI and API constants.
 - Visual baselines are configured under ignored `data/visual-baselines/` and stored through CI artifacts.
@@ -32,7 +33,7 @@ The framework is usable and validated with 105 tests:
 - Keep POM classes focused on page interaction.
 - Keep new constants in `data/`.
 - Keep visual baseline PNGs out of git; use CI artifacts or local ignored files.
-- Run the narrowest relevant suite during iteration, then `npm test` before pushing. Use `npm run test:all` when visual baselines exist and visual coverage is in scope.
+- Run the narrowest relevant suite during iteration, then `npm test` before pushing. Use `npm run test:all` when visual baselines exist and visual or accessibility coverage is in scope.
 - Update docs when framework structure, commands, or conventions change.
 
 ## Risks

@@ -2,13 +2,14 @@
   "name": "playwright-project-pack",
   "version": "1.0.0",
   "private": true,
-  "description": "Production-ready Playwright framework with 105 tests (88 UI + 15 API + 2 visual).",
+  "description": "Production-ready Playwright framework with 108 tests (88 UI + 15 API + 2 visual + 3 accessibility).",
   "scripts": {
     "test": "playwright test --project=ui --project=api",
-    "test:all": "npm test && npm run test:visual",
+    "test:all": "npm test && npm run test:visual && npm run test:accessibility",
     "test:ui": "playwright test --project=ui",
     "test:api": "playwright test --project=api",
     "test:visual": "playwright test --project=visual",
+    "test:accessibility": "playwright test --project=accessibility",
     "test:visual:update": "playwright test --project=visual --update-snapshots",
     "test:visual:update:linux": "docker run --rm -v \"$(pwd):/work\" -w /work mcr.microsoft.com/playwright:v1.60.0-noble npx playwright test --project=visual --update-snapshots",
     "test:headed": "playwright test --headed --workers=1",
@@ -17,6 +18,7 @@
     "report": "playwright show-report"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
     "@playwright/test": "^1.59.1",
     "@types/node": "^20.11.0",
     "cross-env": "^7.0.3",

@@ -8,7 +8,7 @@ These guidelines define how tests should be designed in this Playwright framewor
 
 - Name tests by observable behavior.
 - Keep each test focused on one user-visible outcome.
-- Use domain specs: login, products, cart, checkout, API, and visual.
+- Use domain specs: login, products, cart, checkout, API, visual, and accessibility.
 - Prefer setup helpers when they describe user intent clearly.
 - Avoid hidden setup that makes the assertion hard to understand.
 
@@ -50,6 +50,13 @@ These guidelines define how tests should be designed in this Playwright framewor
 - Mask only known unstable regions; avoid broad masks that hide real layout regressions.
 - Use small diff thresholds only when the target has acceptable rendering variance.
 
+## Accessibility Design
+
+- Keep accessibility tests in `tests/accessibility/*.spec.ts`.
+- Use `@axe-core/playwright` for automated checks.
+- Keep known third-party SauceDemo issues narrowly scoped when they must be excluded.
+- Do not wire accessibility checks into CI until the team decides the gate is ready.
+
 ## Review Checklist
 
 - Does the UI spec avoid raw locator construction?
@@ -57,4 +64,5 @@ These guidelines define how tests should be designed in this Playwright framewor
 - Does the page object avoid business assertions?
 - Is the test name behavior-focused?
 - If this is visual coverage, is the screenshot target stable and baseline committed?
+- If this is accessibility coverage, is any exclusion narrow and explained?
 - Can the test failure point to a specific user-facing behavior?
