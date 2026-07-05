@@ -28,6 +28,7 @@ This project does not deploy an application. The deployable artifact is the test
 
 | Command | Purpose |
 | --- | --- |
+| `npm run typecheck` | Run TypeScript checking without emitting files |
 | `npm test` | Run UI and API tests without requiring visual baselines |
 | `npm run test:all` | Run UI, API, visual, and accessibility tests after visual baselines exist |
 | `npm run test:ui` | Run only UI tests |
@@ -51,16 +52,20 @@ This project does not deploy an application. The deployable artifact is the test
 
 ## CI Guidance
 
-A minimal CI job should:
+The committed workflow is `.github/workflows/tests.yml`.
+
+The default CI gate runs on pull requests and pushes to `main`:
 
 1. Check out the repository.
-2. Set up Node.js.
+2. Set up Node.js 20.
 3. Run `npm ci`.
 4. Run `npx playwright install --with-deps`.
-5. Restore or generate visual baselines.
-6. Run `npm test`.
-7. Run `npm run test:visual`.
-8. Upload `playwright-report/`, `test-results/`, and baseline artifacts, not committed files.
+5. Run `npm run typecheck`.
+6. Restore visual baselines from the latest successful `main` artifact when available.
+7. Generate missing visual baselines, or apply the manual `visual_baseline_update` mode.
+8. Run `npm test`.
+9. Run `npm run test:visual`.
+10. Upload `visual-baselines` and `playwright-report/` artifacts.
 
 Accessibility checks are available through `npm run test:accessibility` and
 `npm run test:all`, but they are not part of the default CI gate yet.

@@ -63,11 +63,11 @@ Visual assertions belong in `tests/visual/*.spec.ts` and should use `toHaveScree
 
 ## Validation
 
-- Run `npx tsc --noEmit` after TypeScript structure changes.
+- Run `npm run typecheck` after TypeScript structure changes.
 - Run `npm run test:ui` for UI-only changes.
 - Run `npm run test:api` for API-only changes.
 - Run `npm run test:visual` for visual-only changes.
 - Run `npm run test:accessibility` for accessibility-only changes.
 - Run `npm run test:visual:update:linux` only when approving intentional CI visual baseline changes.
-- Run `npm test` before pushing or after cross-cutting non-visual changes.
+- Run `npm run typecheck` and `npm test` before pushing or after cross-cutting non-visual changes.
 - Run `npm run test:all` after visual baselines exist when changes affect functional, visual, and accessibility coverage.
