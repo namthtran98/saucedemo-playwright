@@ -29,6 +29,8 @@ jobs:
         run: npm ci
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
+      - name: Typecheck
+        run: npm run typecheck
       - name: Restore visual baselines
         env:
           GH_TOKEN: ${{ github.token }}

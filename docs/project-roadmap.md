@@ -10,6 +10,8 @@ The framework is usable and validated with 128 tests:
 - 3 accessibility checks for login, inventory, and checkout flows.
 - POM structure is in place.
 - Shared data modules cover UI and API constants.
+- `npm run typecheck` provides a reusable TypeScript compile gate.
+- GitHub Actions runs typecheck, UI/API tests, and visual checks.
 - Visual baselines are configured under ignored `data/visual-baselines/` and stored through CI artifacts.
 - `AGENTS.md` documents repo conventions.
 
@@ -21,9 +23,9 @@ The framework is usable and validated with 128 tests:
 | P0 | Complete | Centralize reusable UI/API test data under `data/` |
 | P0 | Complete | Add project documentation under `docs/` |
 | P1 | In Progress | Expand visual regression coverage for checkout and cart flows |
-| P1 | Planned | Add a lightweight typecheck script such as `npm run typecheck` |
+| P1 | Complete | Add a lightweight typecheck script such as `npm run typecheck` |
 | P1 | Planned | Add lint or format tooling if the repo needs stricter style enforcement |
-| P1 | Planned | Add CI workflow to run `npm test` on pull requests |
+| P1 | Complete | Add CI workflow to run `npm test` on pull requests |
 | P2 | Planned | Add API negative cases for malformed JSON and unsupported methods |
 | P2 | Planned | Add README troubleshooting for browser install and port conflicts |
 
@@ -33,7 +35,7 @@ The framework is usable and validated with 128 tests:
 - Keep POM classes focused on page interaction.
 - Keep new constants in `data/`.
 - Keep visual baseline PNGs out of git; use CI artifacts or local ignored files.
-- Run the narrowest relevant suite during iteration, then `npm test` before pushing. Use `npm run test:all` when visual baselines exist and visual or accessibility coverage is in scope.
+- Run the narrowest relevant suite during iteration, then `npm run typecheck` and `npm test` before pushing. Use `npm run test:all` when visual baselines exist and visual or accessibility coverage is in scope.
 - Update docs when framework structure, commands, or conventions change.
 
 ## Risks

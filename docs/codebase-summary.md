@@ -20,6 +20,7 @@ This repository is a compact Playwright test framework. It combines UI automatio
 | `data/visual-baselines/` | Ignored runtime screenshot baselines restored from CI artifacts or generated locally |
 | `mock-api/` | Zero-dependency local REST API |
 | `playwright.config.ts` | Playwright projects, reporters, retries, web server, screenshot baseline path, and test id config |
+| `.github/workflows/tests.yml` | CI workflow for typecheck, UI/API tests, and visual snapshots |
 
 ## Test Suites
 

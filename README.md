@@ -15,10 +15,12 @@ dedicated Playwright project.
 
     npm install
     npx playwright install --with-deps
+    npm run typecheck
     npm test
 
 ## Useful commands
 
+- `npm run typecheck` runs TypeScript checking without emitting files.
 - `npm test` runs the 91 UI tests and 32 API tests.
 - `npm run test:all` runs UI, API, visual, and accessibility tests after visual baselines exist.
 - `npm run test:ui` runs the 91 UI tests.
@@ -30,6 +32,13 @@ dedicated Playwright project.
 - `npm run test:visual:update:linux` updates Linux visual baselines for CI.
 - `npm run test:headed` runs with a visible browser.
 - `npm run report` opens the last HTML report.
+
+## CI
+
+The GitHub Actions workflow at `.github/workflows/tests.yml` runs
+`npm run typecheck`, restores or generates visual baselines, runs `npm test`,
+then runs the visual project. It uploads refreshed `visual-baselines` and the
+Playwright report as workflow artifacts.
 
 ## Visual baselines
 

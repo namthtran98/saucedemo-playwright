@@ -67,6 +67,13 @@ flowchart LR
 - `data-test` is the configured test id attribute.
 - `expect.toHaveScreenshot.pathTemplate` stores runtime visual baselines under ignored `data/visual-baselines/`, split by platform.
 
+## CI Flow
+
+`.github/workflows/tests.yml` runs the CI gate: install dependencies, install
+Playwright browsers, run `npm run typecheck`, restore or generate visual
+baselines, run `npm test`, run the visual project, and upload refreshed
+baselines plus the Playwright report as artifacts.
+
 ## UI Test Flow
 
 1. A UI spec imports either `@playwright/test` or `fixtures/test-fixtures.ts`.

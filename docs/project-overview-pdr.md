@@ -25,6 +25,7 @@ The project currently has 128 tests: 91 UI tests, 32 API tests, 2 visual tests, 
 ## Functional Requirements
 
 - Run UI and API tests with `npm test` without requiring visual baselines.
+- Run TypeScript checking with `npm run typecheck`.
 - Run UI, API, visual, and accessibility tests with `npm run test:all` after visual baselines exist.
 - Run only UI tests with `npm run test:ui`.
 - Run only API tests with `npm run test:api`.
@@ -45,6 +46,7 @@ The project currently has 128 tests: 91 UI tests, 32 API tests, 2 visual tests, 
 - Page objects should stay small and focused.
 - Test reports, traces, screenshots, and generated artifacts should not be committed.
 - Visual baseline PNGs are not committed; CI stores them as workflow artifacts.
+- CI runs typecheck, UI/API tests, and visual checks.
 
 ## Out Of Scope
 
@@ -56,9 +58,10 @@ The project currently has 128 tests: 91 UI tests, 32 API tests, 2 visual tests, 
 ## Success Criteria
 
 - `npm test` passes for UI and API coverage.
+- `npm run typecheck` passes before functional tests run.
 - `npm run test:visual` passes after approved baselines exist.
 - `npm run test:accessibility` passes for selected accessibility checks.
-- `npx tsc --noEmit` passes when type checking is needed.
+- `npm run typecheck` passes when type checking is needed.
 - UI specs contain no raw Playwright locator construction.
 - New test literals are added to `data/` instead of duplicated in specs.
 - Page objects include readiness checks only, not business assertions.
